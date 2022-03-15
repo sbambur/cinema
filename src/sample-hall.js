@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
  
-const seatsNumbers = 30;
+const seatsNumbers = 40;
 
 const generateSeats = () => {
   let content = [];
@@ -11,7 +11,7 @@ const generateSeats = () => {
         {
           id: `${ uuidv4()}`,
           seatNumber: i,
-          price: 100,
+          price: 120,
           reserved: false,
         }
       );

@@ -21,6 +21,7 @@ const Statistic = ({ seats  }) => {
     let stat = getStat()
     setStat(stat)
   },[seats])
+  
   return (
     <div className="infoSide">
       <div className="infoSide__header">Статистика</div>

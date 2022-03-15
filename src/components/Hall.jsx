@@ -1,16 +1,12 @@
 import React from "react";
+import Header from "./Header";
 import Seat from "./utils/Seat";
 
-const Hall = ({title, date, seats, reserveSeat }) => {
+const Hall = ({ date, seats, reserveSeat }) => {
 
   return (
     <div className="hallSide">
-      <div className="cinema-name">
-        <div className="cinema-name__header" >
-          Фильм <span>"{title}"</span>
-        </div>
-        <div className="cinema-name__date">{date}</div>
-      </div>
+      <Header date={date}/>
       <div className="cinema-hall">
         {seats.map((seat) => {
           return (
