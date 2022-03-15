@@ -87,10 +87,6 @@ body {
   background-color: #32da76;
 }
 
-.seat.active p{
-  opacity: 1;
-}
-
 .cinema-name {
   color: #f7f7f7;
   text-align: center;

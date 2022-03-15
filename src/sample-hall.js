@@ -1,19 +1,24 @@
+ 
+import { v4 as uuidv4 } from 'uuid';
+
+ 
 const seatsNumbers = 30;
 
-const genrateSeats = () => {
+const generateSeats = () => {
   let content = [];
     for (let i = 1; i <= seatsNumbers; i++) {
       content.push(
         {
-          id: `id-${i}`,
+          id: `${ uuidv4()}`,
           seatNumber: i,
           price: 100,
+          reserved: false,
         }
       );
     }
     return content;
 }
 
-const seats = genrateSeats();
+const seatArray = generateSeats();
 
-export default seats;
+export default seatArray;
