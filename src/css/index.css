@@ -60,8 +60,12 @@ body {
 }
 
 .seat {
-  width: 60px;
-  height: 45px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 70px;
+  height: 60px;
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
@@ -70,7 +74,7 @@ body {
 }
 
 .seat p {
-  text-align: left;
+  text-align: right;
   opacity: 0;
 }
 
@@ -78,8 +82,15 @@ body {
   background-color: #6fcefd;
   cursor: pointer;
 }
+
 .seat:hover p {
   transition: opacity 0.2s ease-in;
+  opacity: 1;
+}
+
+.seat:hover .edit_seat_button {
+  transition: opacity 0.2s ease-in;
+  visibility: visible;
   opacity: 1;
 }
 
@@ -128,4 +139,23 @@ body {
 
 .cinema-name__input:focus-visible {
   outline: none; 
+}
+
+.edit_seat_button {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #353535;
+  color: #fff;
+  /* background-color: #da7e32; */
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.edit_seat_button:hover {
+  background-color: #717171;
 }

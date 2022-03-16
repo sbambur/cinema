@@ -16,7 +16,6 @@ const generateSeats = () => {
         }
       );
     }
-    
     return content;
 }
 

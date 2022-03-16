@@ -2,11 +2,10 @@ import React from "react";
 import Header from "./Header";
 import Seat from "./utils/Seat";
 
-const Hall = ({ date, seats, reserveSeat }) => {
-
+const Hall = ({ date, seats, reserveSeat, openModal }) => {
   return (
     <div className="hallSide">
-      <Header date={date}/>
+      <Header date={date} />
       <div className="cinema-hall">
         {seats.map((seat) => {
           return (
@@ -17,6 +16,7 @@ const Hall = ({ date, seats, reserveSeat }) => {
               price={seat.price}
               reserved={seat.reserved}
               reserve={reserveSeat}
+              openModal={openModal}
             />
           );
         })}

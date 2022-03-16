@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from "react";
 
-const Statistic = ({ seats  }) => {
-  const [stat, setStat] = useState({})
+const Statistic = ({ seats }) => {
+  const [stat, setStat] = useState({});
 
-  const getStat = () =>{
-    let total = seats.length
-    let free = seats.filter(seat=>!seat.reserved).length
-    let reserved = total - free
-    let sum = seats.reduce((acc,seat)=>{
-      if(seat.reserved){
-        acc+= seat.price
+  const getStat = () => {
+    let total = seats.length;
+    let free = seats.filter((seat) => !seat.reserved).length;
+    let reserved = total - free;
+    let sum = seats.reduce((acc, seat) => {
+      if (seat.reserved) {
+        acc += seat.price;
       }
-      return acc
-    },0)
+      return acc;
+    }, 0);
 
-    return {total, free,reserved,sum} 
-  }
+    return { total, free, reserved, sum };
+  };
 
-  useEffect(()=>{
-    let stat = getStat()
-    setStat(stat)
-  },[seats])
-  
+  useEffect(() => {
+    let stat = getStat();
+    setStat(stat);
+  }, [seats]);
+
   return (
     <div className="infoSide">
-      <div className="infoSide__header">Статистика</div>
+      <div className="infoSide__header">Информация</div>
       <div className="infoSide__info">
         <p>
           Всего мест: <span>{stat.total}</span>
