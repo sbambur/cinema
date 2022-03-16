@@ -1,23 +1,22 @@
 import React from "react";
-import Seat from "./Seat";
-import seats from "../sample-hall";
+import Header from "./Header";
+import Seat from "./utils/Seat";
 
-const Hall = (props) => {
+const Hall = ({ date, seats, reserveSeat }) => {
+
   return (
     <div className="hallSide">
-      <div className="cinema-name">
-        <div className="cinema-name__header">
-          Фильм <span>"{props.title}"</span>
-        </div>
-        <div className="cinema-name__date">{props.date}</div>
-      </div>
+      <Header date={date}/>
       <div className="cinema-hall">
         {seats.map((seat) => {
           return (
             <Seat
               key={seat.id}
+              id={seat.id}
               seatNumber={seat.seatNumber}
               price={seat.price}
+              reserved={seat.reserved}
+              reserve={reserveSeat}
             />
           );
         })}

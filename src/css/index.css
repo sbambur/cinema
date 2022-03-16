@@ -87,10 +87,6 @@ body {
   background-color: #32da76;
 }
 
-.seat.active p{
-  opacity: 1;
-}
-
 .cinema-name {
   color: #f7f7f7;
   text-align: center;
@@ -99,4 +95,37 @@ body {
 .cinema-name__header {
   margin: 40px 0 20px;
   font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cinema-name__edit_btn{
+  padding: 5px 15px;
+  margin: 0 20px;
+  background-color: #c4c4c4;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.cinema-name__edit_btn.active {
+  transition: background-color 0.2s ease;
+  background-color: #6fcefd;
+}
+
+.cinema-name__input {
+  border: 0;
+  background: transparent;
+  font-size: 48px;
+  padding: 0 10px;
+  color: #c4c4c4;
+  border-radius: 5px;
+  box-shadow: 5px 5px 20px #000;
+  border: 2px solid #6fcefd;
+}
+
+.cinema-name__input:focus-visible {
+  outline: none; 
 }
