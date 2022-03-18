@@ -6,6 +6,8 @@ import debounce from "lodash.debounce";
 import { API } from "../api/api";
 import { api_key } from "../config";
 import SeatModal from "./SeatModal";
+import hallsArray from "../sample-halls";
+import HallCard from "./HallCard";
 
 const App = () => {
   const [seats, setSeat] = useState(seatArray);
@@ -20,6 +22,7 @@ const App = () => {
     overview: "",
     poster_path: "",
   });
+  const [halls, setHalls] = useState(hallsArray);
 
   const editName = () => {
     setEdit(!isEdit);
@@ -100,18 +103,53 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <Hall
-          seats={seats}
-          reserveSeat={reserveSeat}
-          openModal={openModal}
-          editName={editName}
-          debouncedOnChange={debouncedOnChange}
-          itemClickHandler={itemClickHandler}
-          foundedMovies={foundedMovies}
-          isEdit={isEdit}
-          currentMovie={currentMovie}
-        />
-        <Statistic seats={seats} currentMovie={currentMovie} />
+        <div className="cinema_header">
+          Кинотеатр: <span>"Название"</span>
+        </div>
+        <div className="container__info">
+          <div className="hall_side">
+            <div className="hall_list">
+              {halls.map((hall) => {
+                return (
+                  <HallCard
+                    key={hall.id}
+                    id={hall.id}
+                    title={hall.title}
+                    movie={hall.movie}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          {/* <Hall
+            seats={seats}
+            reserveSeat={reserveSeat}
+            openModal={openModal}
+            editName={editName}
+            debouncedOnChange={debouncedOnChange}
+            itemClickHandler={itemClickHandler}
+            foundedMovies={foundedMovies}
+            isEdit={isEdit}
+            currentMovie={currentMovie}
+          /> */}
+
+          <div className="info_side">
+            <div className="films">
+              <div className="films__header">Фильмы</div>
+              <div className="films__list">
+                <div className="films_item">
+                  <p>Название</p>
+                  <p>Описание</p>
+                </div>
+                <div className="films_item">
+                  <p>Название</p>
+                  <p>Описание</p>
+                </div>
+              </div>
+            </div>
+            <Statistic seats={seats} currentMovie={currentMovie} />
+          </div>
+        </div>
       </div>
       <SeatModal
         open={open}

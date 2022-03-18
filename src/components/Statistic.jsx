@@ -23,9 +23,9 @@ const Statistic = ({ seats, currentMovie }) => {
   }, [seats]);
 
   return (
-    <div className="infoSide">
-      <div className="infoSide__header">Информация</div>
-      <div className="infoSide__info">
+    <div className="statistic">
+      <div className="statistic__header">Информация</div>
+      <div className="statistic__info">
         <p>
           Всего мест: <span>{stat.total}</span>
         </p>
@@ -40,7 +40,7 @@ const Statistic = ({ seats, currentMovie }) => {
         </p>
       </div>
       {currentMovie.poster_path ? (
-        <div className="infoSide__poster">
+        <div className="statistic__poster">
           <img
             src={`https://image.tmdb.org/t/p/original/${currentMovie.poster_path}`}
             alt={currentMovie.title}
@@ -48,7 +48,7 @@ const Statistic = ({ seats, currentMovie }) => {
         </div>
       ) : null}
       {currentMovie.release_date || currentMovie.overview ? (
-        <div className="infoSide__description">
+        <div className="statistic__description">
           <p>Дата выхода: {currentMovie.release_date.substr(0, 4)} г.</p>
           <br />
           <p>{currentMovie.overview}</p>
