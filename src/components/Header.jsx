@@ -5,7 +5,7 @@ const Header = ({
   editName,
   debouncedOnChange,
   itemClickHandler,
-  query,
+  foundedMovies,
   isEdit,
   currentMovie,
 }) => {
@@ -33,7 +33,7 @@ const Header = ({
             ></input>
             <ul className="autocomplete">
               {currentMovie.title && isEdit
-                ? query.map((movie) => {
+                ? foundedMovies.map((movie) => {
                     return (
                       <li
                         key={movie.id}

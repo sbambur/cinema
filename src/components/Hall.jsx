@@ -3,14 +3,14 @@ import Header from "./Header";
 import Seat from "./utils/Seat";
 
 const Hall = ({
-  date,
+  date='22.12.2021',
   seats,
   reserveSeat,
   openModal,
   editName,
   debouncedOnChange,
   itemClickHandler,
-  query,
+  foundedMovies,
   isEdit,
   currentMovie,
 }) => {
@@ -31,7 +31,7 @@ const Hall = ({
         editName={editName}
         debouncedOnChange={debouncedOnChange}
         itemClickHandler={itemClickHandler}
-        query={query}
+        foundedMovies={foundedMovies}
         isEdit={isEdit}
         currentMovie={currentMovie}
       />
