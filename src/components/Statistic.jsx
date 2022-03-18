@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Statistic = ({ seats }) => {
+const Statistic = ({ seats, currentMovie }) => {
   const [stat, setStat] = useState({});
 
   const getStat = () => {
@@ -39,6 +39,21 @@ const Statistic = ({ seats }) => {
           Выручка: <span>{stat.sum}</span>₽
         </p>
       </div>
+      {currentMovie.poster_path ? (
+        <div className="infoSide__poster">
+          <img
+            src={`https://image.tmdb.org/t/p/original/${currentMovie.poster_path}`}
+            alt={currentMovie.title}
+          />
+        </div>
+      ) : null}
+      {currentMovie.release_date || currentMovie.overview ? (
+        <div className="infoSide__description">
+          <p>Дата выхода: {currentMovie.release_date.substr(0, 4)} г.</p>
+          <br />
+          <p>{currentMovie.overview}</p>
+        </div>
+      ) : null}
     </div>
   );
 };

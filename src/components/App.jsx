@@ -1,13 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Hall from "./Hall";
 import Statistic from "./Statistic";
 import seatArray from "../sample-hall";
-import Modal from "./Modal";
+import debounce from "lodash.debounce";
+import { API } from "../api/api";
+import { api_key } from "../config";
+import SeatModal from "./SeatModal";
 
 const App = () => {
   const [seats, setSeat] = useState(seatArray);
   const [open, setOpen] = useState(false);
+  const [isEdit, setEdit] = useState(false);
   const [currentSeat, setCurrent] = useState({});
+  const [foundedMovies, setFoundedMovies] = useState([]);
+  const [currentMovie, setCurrentMovie] = useState({
+    title: "Название фильма",
+    release_date: "",
+    backdrop_path: "",
+    overview: "",
+    poster_path: "",
+  });
+
+  const editName = () => {
+    setEdit(!isEdit);
+  };
+
+  const itemClickHandler = (key) => {
+    setCurrentMovie(foundedMovies.find((movie) => movie.id === key));
+    setEdit(!isEdit);
+  };
+
+  const currentName = (event) => {
+    setCurrentMovie({ ...currentMovie, title: event.target.value });
+    API.get(`search/movie`, {
+      params: {
+        api_key,
+        query: currentMovie.title,
+        language: "ru-RU",
+      },
+    })
+      .then((response) => setFoundedMovies(response.data.results))
+      .catch((err) =>
+        setFoundedMovies([{ title: "Попробуйте иначе", id: 100002 }])
+      );
+  };
+
+  const debouncedOnChange = debounce(currentName, 400);
 
   const reserveSeat = (key) => {
     setSeat(
@@ -37,7 +75,7 @@ const App = () => {
     setOpen(true);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setSeat(
       seats.map((seat) => {
         if (seat.id === currentSeat.id) {
@@ -48,8 +86,15 @@ const App = () => {
     );
   }, [currentSeat]);
 
+  const validatePrice = (price) => {
+    if (price < 0) return 0;
+    if (price > 999) return 999;
+    return +price;
+  };
+
   const editSeatPrice = (event) => {
-    setCurrent({ ...currentSeat, price: +event.target.value });
+    const price = validatePrice(event.target.value);
+    setCurrent({ ...currentSeat, price: price });
   };
 
   return (
@@ -57,25 +102,23 @@ const App = () => {
       <div className="container">
         <Hall
           seats={seats}
-          date="20.03.2022"
           reserveSeat={reserveSeat}
           openModal={openModal}
+          editName={editName}
+          debouncedOnChange={debouncedOnChange}
+          itemClickHandler={itemClickHandler}
+          foundedMovies={foundedMovies}
+          isEdit={isEdit}
+          currentMovie={currentMovie}
         />
-        <Statistic seats={seats} />
+        <Statistic seats={seats} currentMovie={currentMovie} />
       </div>
-      <Modal open={open} onClose={closeModal}>
-        <p>Номер места: {currentSeat.seatNumber}</p>
-        <p>Статус: {currentSeat.reserved ? "Забронировано" : "Свободно"}</p>
-        <p>
-          Цена: 
-          <input
-            type="number"
-            value={currentSeat.price}
-            onChange={editSeatPrice}
-          ></input>
-          ₽
-        </p>
-      </Modal>
+      <SeatModal
+        open={open}
+        closeModal={closeModal}
+        currentSeat={currentSeat}
+        editSeatPrice={editSeatPrice}
+      />
     </>
   );
 };
