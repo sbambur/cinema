@@ -1,5 +1,4 @@
- import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from 'uuid';
 
 const hallsName = ['Зеленый','Красный','Синий']
 const movies = ['Бесстрашный','Викинги','Пираты']
@@ -10,7 +9,7 @@ const generateSeats = () => {
     for (let i = 1; i <= seatsNumbers; i++) {
       content.push(
         {
-          id: `${ uuidv4()}`,
+          id: uuidv4(),
           seatNumber: i,
           price: 120,
           reserved: false,
@@ -25,7 +24,7 @@ const generateHall = () => {
     for (let i = 0; i < 3; i++) {
       content.push(
         {
-          id: `${ uuidv4()}`,
+          id: uuidv4(),
           title: hallsName[i],
           reserved: false,
           active: true,

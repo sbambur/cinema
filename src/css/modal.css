@@ -15,18 +15,25 @@
 .modal_window {
   background: #c4c4c4;
   box-shadow: 5px 5px 20px #474747;
-  padding: 25px;
+  padding: 25px 40px;
   border-radius: 5px;
   max-width: 600px;
   font-size: 20px;
 }
 
 .modal_window input{
+  display: block;
   background: none;
   border-radius: 5px;
   font-size: 20px;
   border-bottom: 2px solid #353535;
-  width: 80px;
+  padding: 5px;
+  width: fit-content;
+}
+
+.modal_window span{
+  font-size: 14px;
+  color: #9a2222;
 }
 
 .modal_window p{

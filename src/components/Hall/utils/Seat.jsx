@@ -1,5 +1,3 @@
-import React from "react";
-
 const Seat = ({ reserved, seatNumber, price, reserve, id, openModal }) => {
   return (
     <div
@@ -8,7 +6,7 @@ const Seat = ({ reserved, seatNumber, price, reserve, id, openModal }) => {
     >
       {seatNumber}
       <p>{price}₽</p>
-      <button className="edit_seat_button" onClick={(e) => openModal(e, id)}>
+      <button className="edit_seat_button" onClick={openModal(id)}>
         Edit
       </button>
     </div>
