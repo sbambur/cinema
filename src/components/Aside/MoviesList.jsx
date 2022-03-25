@@ -17,13 +17,7 @@ export const MoviesList = ({ halls }) => {
         >
           {halls.map((hall) => {
             if (!hall.movie) {
-              return (
-                <SwiperSlide key={hall.id}>
-                  <div className="films_item">
-                    <p>Нет описания</p>
-                  </div>
-                </SwiperSlide>
-              );
+              return null;
             }
 
             return (

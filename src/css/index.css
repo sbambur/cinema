@@ -232,7 +232,7 @@ body {
 
 .create_hall_button {
   display: inline-block;
-  margin-top: 10px;
+  margin: 10px 15px 10px 0;
   text-decoration: none;
   padding: 5px;
   border: none;
@@ -242,11 +242,21 @@ body {
   cursor: pointer;
 }
 
+.create_hall_button.delete {
+  background-color: #717171;
+
+}
+
 .create_hall_button:hover {
   transition: ease-in-out 0.3s;
   cursor: pointer;
   background-color: #6fcefd;
 }
+
+.create_hall_button.delete:hover {
+  background-color: #8e1b1b;
+}
+
 
 .edit_seat_button {
   position: absolute;

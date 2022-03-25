@@ -1,4 +1,4 @@
-import { ADD_HALL, RESERVE_HALL_SEAT } from "../types"
+import { ADD_HALL, DELETE_HALL, RESERVE_HALL_SEAT } from "../types"
 
 const initialState = {
   halls: []
@@ -36,6 +36,9 @@ export const hallReducer = (state = initialState, action) => {
           return { ...h, seats: otherSeats };
         })
       }
+
+    case DELETE_HALL:
+      return { ...state, halls: [...state.halls.filter(hall => hall.id !== payload)]}
 
     default:
       return state

@@ -1,13 +1,14 @@
 import { MainLayout } from "../../UI/MainLayout";
 import { MoviesList } from "../Aside/MoviesList";
 import HallCard from "../Hall/HallCard";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Header from "./Header";
 import Statistic from "../Aside/Statistic";
 import CreateHall from "../Hall/CreateHall";
 import CreateHallModal from "../Hall/utils/CreateHallModal";
 import BaseSettingsModal from "../Aside/utils/BaseSettingsModal";
 import { useSelector } from "react-redux";
+import { AuthContext } from "../../store/AuthContext";
 
 export const Main = () => {
   const { halls } = useSelector((state) => state.hallReducer);
@@ -16,6 +17,8 @@ export const Main = () => {
     hallModal: false,
     settingsModal: false,
   });
+
+  const [auth, setAuth] = useContext(AuthContext);
 
   const openModal = (modalName, isOpen) => {
     return () => {
@@ -34,14 +37,19 @@ export const Main = () => {
       <Header />
 
       <aside>
+        <button onClick={() => setAuth(!auth)} className="create_hall_button">
+          {auth ? "Log out" : "Login"}
+        </button>
         <MoviesList halls={halls} />
         <Statistic halls={halls} />
-        <button
-          className="create_hall_button"
-          onClick={openModal("settingsModal", true)}
-        >
-          Настройки
-        </button>
+        {auth ? (
+          <button
+            className="create_hall_button"
+            onClick={openModal("settingsModal", true)}
+          >
+            Настройки
+          </button>
+        ) : null}
       </aside>
 
       <div className="content">
@@ -50,13 +58,14 @@ export const Main = () => {
             return (
               <HallCard
                 key={hall.id}
+                id={hall.id}
                 title={hall.title}
                 movie={hall.movie ? hall.movie.title : "Введите название"}
                 link={hall.id}
               />
             );
           })}
-          <CreateHall openModal={openModal} />
+          {auth ? <CreateHall openModal={openModal} /> : null}
         </div>
       </div>
 

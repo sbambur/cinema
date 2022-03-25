@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import { AuthContext } from "../../../store/AuthContext";
+
 const Seat = ({ reserved, seatNumber, price, reserve, id, openModal }) => {
+  const [auth] = useContext(AuthContext);
+
   return (
     <div
       className={`seat ${reserved ? "active" : ""}`}
@@ -6,9 +11,11 @@ const Seat = ({ reserved, seatNumber, price, reserve, id, openModal }) => {
     >
       {seatNumber}
       <p>{price}₽</p>
-      <button className="edit_seat_button" onClick={openModal(id)}>
-        Edit
-      </button>
+      {auth ? (
+        <button className="edit_seat_button" onClick={openModal(id)}>
+          Edit
+        </button>
+      ) : null}
     </div>
   );
 };
