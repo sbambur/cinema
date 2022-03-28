@@ -1,16 +1,17 @@
 import debounce from "lodash.debounce";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { API } from "../../api/api";
 import { api_key } from "../../config";
+import { useActions } from "../../hooks/useActions";
 
 const SearchHeader = ({ currentHall }) => {
-  const dispatch = useDispatch();
-
   const [isEdit, setIsEdit] = useState(false);
+  const [currentMovie, setCurrentMovie] = useState(null);
   const [foundedMovies, setFoundedMovies] = useState([]);
   const inputEl = useRef(null);
 
+  const { setMovie } = useActions();
+   
   useEffect(() => {
     if (isEdit) {
       inputEl?.current?.focus();
@@ -18,10 +19,11 @@ const SearchHeader = ({ currentHall }) => {
   });
 
   const setCurrentHallMovie = (event) => {
+    setCurrentMovie(event.target.value)
     API.get(`search/movie`, {
       params: {
         api_key,
-        query: event.target.value,
+        query: currentMovie,
         language: "ru-RU",
       },
     })
@@ -34,11 +36,10 @@ const SearchHeader = ({ currentHall }) => {
   const debouncedOnChange = debounce(setCurrentHallMovie, 400);
 
   const itemClickHandler = (key) => {
-    let updatedHall = {
-      ...currentHall,
-      movie: foundedMovies.find((movie) => movie.id === key),
-    };
-    dispatch({ type: "EDIT_HALL", payload: updatedHall });
+    const movie = foundedMovies.find((movie) => movie.id === key)
+
+    setCurrentMovie(movie.title)
+    setMovie(currentHall, movie)
     setIsEdit(!isEdit);
   };
 
@@ -79,8 +80,7 @@ const SearchHeader = ({ currentHall }) => {
           </form>
         ) : (
           <span>
-            "{!currentHall.movie ? "Введите название" : currentHall.movie.title}
-            "
+            "{!currentHall.movie ? "Введите название" : currentHall.movie.title}"
           </span>
         )}
         <button

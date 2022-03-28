@@ -3,8 +3,35 @@ import { Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import { imageBase } from "../../api/api";
+import { memo } from "react";
 
-export const MoviesList = ({ halls }) => {
+const MoviesList = ({ halls }) => {
+  const moviesItems = halls.map((hall) => {
+    if (!hall.movie) {
+      return null;
+    }
+
+    return (
+      <SwiperSlide key={hall.movie.id}>
+        <div className="films_item">
+          <div className="film_poster">
+            <img
+              src={`${imageBase}${hall.movie.poster_path}`}
+              alt={hall.movie.title}
+            />
+          </div>
+          <div className="film_overview">
+            <p>{hall.movie.title}</p>
+          </div>
+        </div>
+      </SwiperSlide>
+    );
+  });
+
+  if (halls.length === 0 || moviesItems.length === 0 || moviesItems[0] === null) {
+    return null;
+  }
+  
   return (
     <div className="films">
       <div className="films__header">Фильмы</div>
@@ -15,29 +42,11 @@ export const MoviesList = ({ halls }) => {
           slidesPerView={1}
           pagination={{ clickable: true }}
         >
-          {halls.map((hall) => {
-            if (!hall.movie) {
-              return null;
-            }
-
-            return (
-              <SwiperSlide key={hall.movie.id}>
-                <div className="films_item">
-                  <div className="film_poster">
-                    <img
-                      src={`${imageBase}${hall.movie.poster_path}`}
-                      alt={hall.movie.title}
-                    />
-                  </div>
-                  <div className="film_overview">
-                    <p>{hall.movie.title}</p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            );
-          })}
+          {moviesItems}
         </Swiper>
       </div>
     </div>
   );
 };
+
+export const MemoMoviesList = memo(MoviesList);

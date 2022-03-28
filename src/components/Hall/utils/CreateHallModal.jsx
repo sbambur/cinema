@@ -29,7 +29,7 @@ const CreateHallModal = ({ basePrice, open, closeModal }) => {
           type="number"
           name="count"
           {...register("count", {
-            validate: (value) => value > 0 && value < 99,
+            min: 1, max: 99,
             setValueAs: (v) => parseInt(v),
           })}
         />
@@ -40,11 +40,11 @@ const CreateHallModal = ({ basePrice, open, closeModal }) => {
           type="number"
           name="price"
           {...register("price", {
-            validate: (value) => value > 0 && value < 999,
+            min: 1, max: 999,
             setValueAs: (v) => parseInt(v),
           })}
         />
-        {errors.price && <span>Заполните цену</span>}
+        {errors.price && <span>Неверная цена</span>}
         <div>
           <br />
           <input type="submit" value="Создать" />

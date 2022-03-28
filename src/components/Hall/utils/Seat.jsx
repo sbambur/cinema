@@ -7,7 +7,7 @@ const Seat = ({ reserved, seatNumber, price, reserve, id, openModal }) => {
   return (
     <div
       className={`seat ${reserved ? "active" : ""}`}
-      onClick={() => reserve(id)}
+      onClick={reserve(id)}
     >
       {seatNumber}
       <p>{price}₽</p>

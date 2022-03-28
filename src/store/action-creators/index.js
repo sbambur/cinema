@@ -1,9 +1,13 @@
-import * as HallActionCreator from "./createHall"
-import * as UpdateHallActionCreator from "./updateHall"
+import * as CreateHallActionCreator from "./createHall"
 import * as DeleteHallActionCreator from "./deleteHall"
+import * as ReserveSeatActionCreator from "./reserveSeat"
+import * as SetMovieActionCreator from "./setMovie"
+import * as EditSeatPriceActionCreator from "./editSeatPrice"
 
 export default {
-  ...HallActionCreator,
-  ...UpdateHallActionCreator,
-  ...DeleteHallActionCreator
+  ...CreateHallActionCreator,
+  ...DeleteHallActionCreator,
+  ...ReserveSeatActionCreator,
+  ...SetMovieActionCreator,
+  ...EditSeatPriceActionCreator
 }

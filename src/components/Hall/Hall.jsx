@@ -1,8 +1,9 @@
 import { useLayoutEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { useActions } from "../../hooks/useActions";
 import { MainLayout } from "../../UI/MainLayout";
-import MovieDescription from "../Aside/MovieDescription";
+import { MemoMovieDescription } from "../Aside/MovieDescription";
 import Statistic from "../Aside/Statistic";
 import Header from "../Main/Header";
 import SearchHeader from "./SearchHeader";
@@ -15,26 +16,15 @@ const Hall = () => {
   const [currentHall, setCurrentHall] = useState({});
   const [currentSeat, setCurrentSeat] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
-  const dispatch = useDispatch();
-
+  const { reserveSeat, editSeatPrice } = useActions();
+  
   useLayoutEffect(() => {
     setCurrentHall(halls.find((hall) => hall.id === hallId));
     return () => setCurrentHall({});
   }, [hallId, halls]);
 
-  if (Object.keys(currentHall).length === 0) {
-    return null;
-  }
-
   const reserveSeatLocal = (id) => {
-    let updatedHall = {
-      ...currentHall,
-      seats: currentHall.seats.map((seat) => {
-        if (seat.id === id) return { ...seat, reserved: !seat.reserved };
-        return seat;
-      }),
-    };
-    dispatch({ type: "EDIT_HALL", payload: updatedHall });
+    return () => reserveSeat(currentHall, id)
   };
 
   const validatePrice = (price) => {
@@ -43,18 +33,11 @@ const Hall = () => {
     return +price;
   };
 
-  const editSeatPrice = (id) => {
+  const editSeatPriceLocal = (id) => {
     return (e) => {
       const price = validatePrice(e.target.value);
       setCurrentSeat({ ...currentSeat, price: price });
-      let updatedHall = {
-        ...currentHall,
-        seats: currentHall.seats.map((seat) => {
-          if (seat.id === id) return { ...seat, price: price };
-          return seat;
-        }),
-      };
-      dispatch({ type: "EDIT_HALL", payload: updatedHall });
+      editSeatPrice(currentHall, id, price)
     };
   };
 
@@ -75,12 +58,16 @@ const Hall = () => {
     setModalOpen(false);
   };
 
+  if (Object.keys(currentHall).length === 0) {
+    return null;
+  }
+
   return (
     <MainLayout>
       <Header title={currentHall.title} />
 
       <aside>
-        <MovieDescription currentMovie={currentHall.movie} />
+        <MemoMovieDescription currentMovie={currentHall.movie} />
         <Statistic halls={halls} currentHall={currentHall} />
       </aside>
 
@@ -115,7 +102,7 @@ const Hall = () => {
         open={isModalOpen}
         closeModal={closeModal}
         currentSeat={currentSeat}
-        editSeatPrice={editSeatPrice}
+        editSeatPrice={editSeatPriceLocal}
       />
     </MainLayout>
   );

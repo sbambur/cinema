@@ -1,5 +1,5 @@
 import { MainLayout } from "../../UI/MainLayout";
-import { MoviesList } from "../Aside/MoviesList";
+import { MemoMoviesList } from "../Aside/MoviesList";
 import HallCard from "../Hall/HallCard";
 import { useContext, useState } from "react";
 import Header from "./Header";
@@ -40,7 +40,7 @@ export const Main = () => {
         <button onClick={() => setAuth(!auth)} className="create_hall_button">
           {auth ? "Log out" : "Login"}
         </button>
-        <MoviesList halls={halls} />
+        <MemoMoviesList halls={halls} />
         <Statistic halls={halls} />
         {auth ? (
           <button
@@ -60,7 +60,7 @@ export const Main = () => {
                 key={hall.id}
                 id={hall.id}
                 title={hall.title}
-                movie={hall.movie ? hall.movie.title : "Введите название"}
+                movie={hall.movie ? hall.movie.title : "Фильм не выбран"}
                 link={hall.id}
               />
             );
