@@ -5,6 +5,7 @@
 /.pnp
 /info.md
 .pnp.js
+src/config.ts
 
 # testing
 /coverage

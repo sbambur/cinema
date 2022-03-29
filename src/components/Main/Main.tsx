@@ -1,4 +1,4 @@
-import { MainLayout } from "../../UI/MainLayout";
+import MainLayout from "../../UI/MainLayout";
 import { MemoMoviesList } from "../Aside/MoviesList";
 import HallCard from "../Hall/HallCard";
 import { useContext, useState } from "react";
@@ -7,29 +7,33 @@ import Statistic from "../Aside/Statistic";
 import CreateHall from "../Hall/CreateHall";
 import CreateHallModal from "../Hall/utils/CreateHallModal";
 import BaseSettingsModal from "../Aside/utils/BaseSettingsModal";
-import { useSelector } from "react-redux";
-import { AuthContext } from "../../store/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import { FC } from "react";
+import { useTypeSelector } from "../../hooks/useTypeSelector";
 
-export const Main = () => {
-  const { halls } = useSelector((state) => state.hallReducer);
+interface isModalOpenState {
+  hallModal: boolean;
+  settingsModal: boolean;
+}
+
+export const Main: FC = () => {
+  const { halls } = useTypeSelector((state) => state.hallReducer);
   const [basePrice, setBasePrice] = useState(120);
-  const [isModalOpen, setModalOpen] = useState({
+  const [isModalOpen, setModalOpen] = useState<isModalOpenState>({
     hallModal: false,
     settingsModal: false,
   });
 
   const [auth, setAuth] = useContext(AuthContext);
 
-  const openModal = (modalName, isOpen) => {
+  const openModal = (modalName: string, isOpen: boolean) => {
     return () => {
       setModalOpen({ ...isModalOpen, [modalName]: isOpen });
     };
   };
 
   const closeModal = () => {
-    for (let key in isModalOpen) {
-      setModalOpen((isModalOpen[key] = false));
-    }
+    setModalOpen({hallModal: false,settingsModal: false });
   };
 
   return (

@@ -1,50 +1,53 @@
-import { useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useContext, useLayoutEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import { useActions } from "../../hooks/useActions";
-import { MainLayout } from "../../UI/MainLayout";
 import { MemoMovieDescription } from "../Aside/MovieDescription";
+import MainLayout from "../../UI/MainLayout";
 import Statistic from "../Aside/Statistic";
 import Header from "../Main/Header";
 import SearchHeader from "./SearchHeader";
 import Seat from "./utils/Seat";
 import SeatSettingModal from "./utils/SeatSettingModal";
+import { FC } from "react";
+import { IHall, ISeat } from "../../types/hall";
+import { useTypeSelector } from "../../hooks/useTypeSelector";
 
-const Hall = () => {
+const Hall: FC = () => {
   const { id: hallId } = useParams();
-  const { halls } = useSelector((state) => state.hallReducer);
-  const [currentHall, setCurrentHall] = useState({});
-  const [currentSeat, setCurrentSeat] = useState({});
+  const { halls } = useTypeSelector(state => state.hallReducer);
+  const [currentHall, setCurrentHall] = useState<IHall>(halls[0]);
+  const [currentSeat, setCurrentSeat] = useState<ISeat>(currentHall.seats[0]);
   const [isModalOpen, setModalOpen] = useState(false);
   const { reserveSeat, editSeatPrice } = useActions();
-  
+  const [auth] = useContext(AuthContext);
+
   useLayoutEffect(() => {
-    setCurrentHall(halls.find((hall) => hall.id === hallId));
-    return () => setCurrentHall({});
+    setCurrentHall(halls.find((hall) => hall.id === hallId)!);
   }, [hallId, halls]);
 
-  const reserveSeatLocal = (id) => {
-    return () => reserveSeat(currentHall, id)
+  const reserveSeatLocal = (id: string) => {
+    return () => reserveSeat(currentHall, id);
   };
 
-  const validatePrice = (price) => {
-    if (price < 0) return 0;
-    if (price > 999) return 999;
+  const validatePrice = (price: string): number => {
+    if (Number(price) < 0) return 0;
+    if (Number(price) > 999) return 999;
     return +price;
   };
 
-  const editSeatPriceLocal = (id) => {
-    return (e) => {
+  const editSeatPriceLocal = (id: string) => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
       const price = validatePrice(e.target.value);
       setCurrentSeat({ ...currentSeat, price: price });
-      editSeatPrice(currentHall, id, price)
+      editSeatPrice(currentHall, id, price);
     };
   };
 
-  const openModal = (key) => {
-    return (e) => {
+  const openModal = (key: string) => {
+    return (e: any) => {
       e.stopPropagation();
-      currentHall.seats.map((seat) => {
+      currentHall.seats.map((seat: ISeat) => {
         if (seat.id === key) {
           setCurrentSeat(seat);
         }
@@ -82,15 +85,23 @@ const Hall = () => {
             <div className="cinema-hall">
               {currentHall.seats.map((seat) => {
                 return (
-                  <Seat
-                    key={seat.id}
-                    id={seat.id}
-                    seatNumber={seat.seatNumber}
-                    price={seat.price}
-                    reserved={seat.reserved}
-                    reserve={reserveSeatLocal}
-                    openModal={openModal}
-                  />
+                  <Seat key={seat.id}>
+                    <div
+                      className={`seat ${seat.reserved ? "active" : ""}`}
+                      onClick={reserveSeatLocal(seat.id)}
+                    >
+                      {seat.seatNumber}
+                      <p>{seat.price}₽</p>
+                      {auth ? (
+                        <button
+                          className="edit_seat_button"
+                          onClick={openModal(seat.id)}
+                        >
+                          Edit
+                        </button>
+                      ) : null}
+                    </div>
+                  </Seat>
                 );
               })}
             </div>

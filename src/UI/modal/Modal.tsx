@@ -1,8 +1,13 @@
-import React from "react";
+import { FC } from "react";
 import { createPortal } from "react-dom";
 import "../../css/modal.css"
 
-const Modal = ({ open, onClose, children }) => {
+interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
   return !open
     ? null
     : createPortal(
@@ -11,7 +16,7 @@ const Modal = ({ open, onClose, children }) => {
             {children}
           </div>
         </div>,
-        document.querySelector("#modal")
+        document.querySelector("#modal")!
       );
 };
 

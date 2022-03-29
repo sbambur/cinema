@@ -4,8 +4,14 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { imageBase } from "../../api/api";
 import { memo } from "react";
+import { FC } from "react";
+import { IHall } from "../../types/hall";
 
-const MoviesList = ({ halls }) => {
+interface MoviesListProps {
+  halls: IHall[]
+}
+
+const MoviesList: FC<MoviesListProps> = ({ halls }) => {
   const moviesItems = halls.map((hall) => {
     if (!hall.movie) {
       return null;
@@ -28,7 +34,9 @@ const MoviesList = ({ halls }) => {
     );
   });
 
-  if (halls.length === 0 || moviesItems.length === 0 || moviesItems[0] === null) {
+  const isFilms = moviesItems.find(movie => movie !== null) ? false : true;
+
+  if (halls.length === 0 || moviesItems.length === 0 || isFilms) {        
     return null;
   }
   

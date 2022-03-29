@@ -1,16 +1,16 @@
-import { ADD_HALL, DELETE_HALL, EDIT_HALL } from "../types"
+import { HallState, TodoActionTypes, HallAction } from "../../types/hall"
 
-const initialState = {
+const initialState: HallState = {
   halls: []
 }
 
-export const hallReducer = (state = initialState, action) => {
+export const hallReducer = (state = initialState, action: HallAction): HallState => {
   const { payload, type } = action
   switch (type) {
-    case ADD_HALL:
+    case TodoActionTypes.ADD_HALL:
       return { ...state, halls: [...state.halls, payload] }
 
-    case EDIT_HALL:
+    case TodoActionTypes.EDIT_HALL:
       let newHalls = [...state.halls.map(hall => {
         if (hall.id === payload.id) {
           return payload
@@ -19,7 +19,7 @@ export const hallReducer = (state = initialState, action) => {
       })]
       return { ...state, halls: newHalls }
 
-    case DELETE_HALL:
+    case TodoActionTypes.DELETE_HALL:
       return { ...state, halls: [...state.halls.filter(hall => hall.id !== payload)]}
 
     default:

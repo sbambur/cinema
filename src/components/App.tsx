@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { AuthContext } from "../store/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import Hall from "./Hall/Hall";
 import { Main } from "./Main/Main";
 
 const App = () => {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState();
   return (
     <AuthContext.Provider value={[auth, setAuth]}>
       <Routes>

@@ -1,13 +1,21 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useActions } from "../../hooks/useActions";
-import { AuthContext } from "../../store/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import { FC } from "react";
 
-const HallCard = ({ link, title, movie, id }) => {
+interface HallCardProps {
+  link: string;
+  title: string;
+  movie: string;
+  id: string
+}
+
+const HallCard: FC<HallCardProps> = ({ link, title, movie, id }) => {
   const { deleteHall } = useActions();
   const [auth] = useContext(AuthContext);
 
-  const handleClick = (key) => {
+  const handleClick = (key: string) => {
     return () => {
       deleteHall(key);
     };

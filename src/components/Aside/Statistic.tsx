@@ -1,18 +1,36 @@
+import { FC } from "react";
 import { useEffect, useState } from "react";
-import { getCurrentHallStat, getHallsStat } from "./utils/calculateStatistic";
+import { IHall } from "../../types/hall";
+import { getHallsStat } from "./utils/calculateStatistic";
 
-const Statistic = ({ halls, currentHall }) => {
-  const [stat, setStat] = useState({});
+interface StatisticProps {
+  halls: IHall[];
+  currentHall?: IHall;
+}
+
+interface statInfo {
+  total: number;
+  free: number;
+  reserved: number;
+  sum: number;
+}
+
+const initialStatState: statInfo  = {
+  total: 0,
+  free: 0,
+  reserved: 0,
+  sum: 0
+}
+
+const Statistic: FC<StatisticProps> = ({ halls, currentHall }) => {
+  const [stat, setStat] = useState<statInfo>(initialStatState);
 
   useEffect(() => {
-    let statistic;
-    if (!currentHall) {
-      statistic = getHallsStat(halls);
+    if (currentHall) {
+      setStat(getHallsStat([currentHall]));
     } else {
-      statistic = getCurrentHallStat(currentHall);
+      setStat(getHallsStat(halls));
     }
-
-    setStat(statistic);
   }, [halls, currentHall]);
 
   return (

@@ -1,7 +1,12 @@
-import { memo } from "react";
+import { FC, memo } from "react";
 import { imageBase } from "../../api/api";
+import { IMovie } from "../../types/hall";
 
-const MovieDescription = ({ currentMovie }) => {
+interface MovieDescProps {
+  currentMovie?: IMovie | null
+}
+
+const MovieDescription:FC<MovieDescProps> = ({ currentMovie }) => {
   if (!currentMovie) {
     return null;
   }
