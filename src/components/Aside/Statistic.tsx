@@ -1,10 +1,11 @@
 import { FC } from "react";
 import { useEffect, useState } from "react";
-import { IHall } from "../../types/hall";
-import { getHallsStat } from "./utils/calculateStatistic";
+
+import { IHall } from "types/hall";
+import { getHallsStat } from "components/Aside/utils/calculateStatistic";
+import { useTypedSelector } from "hooks/useTypedSelector";
 
 interface StatisticProps {
-  halls: IHall[];
   currentHall?: IHall;
 }
 
@@ -15,14 +16,15 @@ interface statInfo {
   sum: number;
 }
 
-const initialStatState: statInfo  = {
+const initialStatState: statInfo = {
   total: 0,
   free: 0,
   reserved: 0,
-  sum: 0
-}
+  sum: 0,
+};
 
-const Statistic: FC<StatisticProps> = ({ halls, currentHall }) => {
+const Statistic: FC<StatisticProps> = ({ currentHall }) => {
+  const { halls } = useTypedSelector((state) => state.hallReducer);
   const [stat, setStat] = useState<statInfo>(initialStatState);
 
   useEffect(() => {

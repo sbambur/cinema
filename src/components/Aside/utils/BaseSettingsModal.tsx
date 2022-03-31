@@ -1,5 +1,6 @@
 import { FC, useRef } from "react";
-import Modal from "../../../UI/modal/Modal";
+
+import Modal from "UI/modal/Modal";
 
 interface BaseSettingsModalProps {
   basePrice: number;
@@ -14,11 +15,10 @@ const BaseSettingsModal: FC<BaseSettingsModalProps> = ({
   open,
   closeModal,
 }) => {
-  
   const inputElCount = useRef<HTMLInputElement>(null);
 
   const basePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const node = Number(e.target.value)
+    const node = Number(e.target.value);
     setBasePrice(node);
   };
 

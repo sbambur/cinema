@@ -2,22 +2,20 @@ import { HallAction, TodoActionTypes } from "../../types/hall";
 import { Dispatch } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-interface createHallType {
+export interface createHallType {
   title: string;
-  count: number;
-  price: number;
+  count: string;
+  price: string;
 }
 
-const generateSeats = (seatCount: number, basePrice: number): any[] => {
-  let content = [];
-  for (let i = 1; i <= seatCount; i++) {
-    content.push({
-      id: uuidv4(),
-      seatNumber: i,
-      price: basePrice,
-      reserved: false,
-    });
-  }
+const generateSeats = (length: number, basePrice: string): any[] => {
+  let content = Array.from({ length }, (a, i) => ({
+    id: uuidv4(),
+    seatNumber: i + 1,
+    price: Number(basePrice),
+    reserved: false,
+  }));
+
   return content;
 };
 
@@ -30,7 +28,7 @@ export const createHall = ({ title, count, price }: createHallType) => {
       active: true,
       date: null,
       movie: null,
-      seats: generateSeats(count, price),
+      seats: generateSeats(+count, price),
     };
     dispatch({ type: TodoActionTypes.ADD_HALL, payload: newHall });
   };

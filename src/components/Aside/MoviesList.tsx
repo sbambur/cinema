@@ -1,45 +1,21 @@
+import { FC } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
+
+import { useTypedSelector } from "hooks/useTypedSelector";
+
+import { MovieItem } from "components/Aside/utils/MovieItem";
+
 import "swiper/css";
 import "swiper/css/pagination";
-import { imageBase } from "../../api/api";
-import { memo } from "react";
-import { FC } from "react";
-import { IHall } from "../../types/hall";
 
-interface MoviesListProps {
-  halls: IHall[]
-}
+export const MoviesList: FC = () => {
+  const { halls } = useTypedSelector((state) => state.hallReducer);
 
-const MoviesList: FC<MoviesListProps> = ({ halls }) => {
-  const moviesItems = halls.map((hall) => {
-    if (!hall.movie) {
-      return null;
-    }
+  const listMovies = halls.filter(({ movie }) => Boolean(movie));
 
-    return (
-      <SwiperSlide key={hall.movie.id}>
-        <div className="films_item">
-          <div className="film_poster">
-            <img
-              src={`${imageBase}${hall.movie.poster_path}`}
-              alt={hall.movie.title}
-            />
-          </div>
-          <div className="film_overview">
-            <p>{hall.movie.title}</p>
-          </div>
-        </div>
-      </SwiperSlide>
-    );
-  });
+  if (!listMovies.length) return null;
 
-  const isFilms = moviesItems.find(movie => movie !== null) ? false : true;
-
-  if (halls.length === 0 || moviesItems.length === 0 || isFilms) {        
-    return null;
-  }
-  
   return (
     <div className="films">
       <div className="films__header">Фильмы</div>
@@ -50,11 +26,21 @@ const MoviesList: FC<MoviesListProps> = ({ halls }) => {
           slidesPerView={1}
           pagination={{ clickable: true }}
         >
-          {moviesItems}
+          {halls.map((hall) => {
+            if (!hall.movie) {
+              return null;
+            }
+            return (
+              <SwiperSlide key={hall.movie.id}>
+                <MovieItem
+                  title={hall.movie.title}
+                  poster={hall.movie.poster_path}
+                />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
     </div>
   );
 };
-
-export const MemoMoviesList = memo(MoviesList);

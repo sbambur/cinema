@@ -1,14 +1,14 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useActions } from "../../hooks/useActions";
-import { AuthContext } from "../../context/AuthContext";
-import { FC } from "react";
+
+import { useActions } from "hooks/useActions";
+import { AuthContext } from "context/AuthContext";
 
 interface HallCardProps {
   link: string;
   title: string;
   movie: string;
-  id: string
+  id: string;
 }
 
 const HallCard: FC<HallCardProps> = ({ link, title, movie, id }) => {

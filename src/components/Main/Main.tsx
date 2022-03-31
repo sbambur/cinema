@@ -1,30 +1,29 @@
-import MainLayout from "../../UI/MainLayout";
-import { MemoMoviesList } from "../Aside/MoviesList";
-import HallCard from "../Hall/HallCard";
-import { useContext, useState } from "react";
-import Header from "./Header";
-import Statistic from "../Aside/Statistic";
-import CreateHall from "../Hall/CreateHall";
-import CreateHallModal from "../Hall/utils/CreateHallModal";
-import BaseSettingsModal from "../Aside/utils/BaseSettingsModal";
-import { AuthContext } from "../../context/AuthContext";
-import { FC } from "react";
-import { useTypeSelector } from "../../hooks/useTypeSelector";
+import { FC, useContext, useState } from "react";
+
+import { useTypedSelector } from "hooks/useTypedSelector";
+import { AuthContext } from "context/AuthContext";
+
+import { MoviesList } from "components/Aside/MoviesList";
+import Statistic from "components/Aside/Statistic";
+import Header from "components/Main/Header";
+import HallCard from "components/Hall/HallCard";
+import CreateHall from "components/Hall/CreateHall";
+import CreateHallModal from "components/Hall/utils/CreateHallModal";
+import BaseSettingsModal from "components/Aside/utils/BaseSettingsModal";
 
 interface isModalOpenState {
   hallModal: boolean;
   settingsModal: boolean;
 }
 
-export const Main: FC = () => {
-  const { halls } = useTypeSelector((state) => state.hallReducer);
+const Main: FC = () => {
+  const { halls } = useTypedSelector((state) => state.hallReducer);
   const [basePrice, setBasePrice] = useState(120);
+  const [auth, setAuth] = useContext(AuthContext);
   const [isModalOpen, setModalOpen] = useState<isModalOpenState>({
     hallModal: false,
     settingsModal: false,
   });
-
-  const [auth, setAuth] = useContext(AuthContext);
 
   const openModal = (modalName: string, isOpen: boolean) => {
     return () => {
@@ -33,19 +32,19 @@ export const Main: FC = () => {
   };
 
   const closeModal = () => {
-    setModalOpen({hallModal: false,settingsModal: false });
+    setModalOpen({ hallModal: false, settingsModal: false });
   };
 
   return (
-    <MainLayout>
+    <>
       <Header />
 
       <aside>
         <button onClick={() => setAuth(!auth)} className="create_hall_button">
           {auth ? "Log out" : "Login"}
         </button>
-        <MemoMoviesList halls={halls} />
-        <Statistic halls={halls} />
+        <MoviesList />
+        <Statistic />
         {auth ? (
           <button
             className="create_hall_button"
@@ -84,6 +83,8 @@ export const Main: FC = () => {
         closeModal={closeModal}
         open={isModalOpen.hallModal}
       />
-    </MainLayout>
+    </>
   );
 };
+
+export default Main;

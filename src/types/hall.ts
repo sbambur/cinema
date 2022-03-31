@@ -21,7 +21,7 @@ export interface IHall {
   active: boolean;
   date: Date | null;
   movie: IMovie | null;
-  seats: ISeat[]
+  seats: ISeat[];
 }
 
 export interface HallState {
@@ -47,7 +47,4 @@ interface DeleteHallAction {
   payload: string;
 }
 
-export type HallAction =
-  | AddHallAction
-  | EditHallAction
-  | DeleteHallAction
+export type HallAction = AddHallAction | EditHallAction | DeleteHallAction;

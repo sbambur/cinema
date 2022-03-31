@@ -1,30 +1,36 @@
+import { FC, useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
-import { FC } from "react";
-import { useEffect, useRef, useState } from "react";
-import { API } from "../../api/api";
-import { api_key } from "../../config";
-import { useActions } from "../../hooks/useActions";
-import { IHall, IMovie } from "../../types/hall";
+
+import { IHall, IMovie } from "types/hall";
+
+import { API } from "api/api";
+import { api_key } from "config";
+import { useActions } from "hooks/useActions";
 
 interface SearchHeaderProps {
-  currentHall: IHall
+  currentHall: IHall;
 }
 
 const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
-  const initialMovieValue = currentHall.movie ? currentHall.movie.title : '';
-  const [isEdit, setIsEdit] = useState(false);
-  const [currentMovie, setCurrentMovie] = useState(initialMovieValue);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [currentMovie, setCurrentMovie] = useState<string>("");
   const [foundedMovies, setFoundedMovies] = useState<IMovie[]>([]);
-  const inputEl = useRef(null);
-
+  const inputEl = useRef<HTMLInputElement>(null);
   const { setMovie } = useActions();
-   
+
   useEffect(() => {
-    const node = inputEl.current as any
-    if (node) {
-      node?.current?.focus();
+    if (inputEl) {
+      inputEl?.current?.focus();
     }
   });
+
+  useEffect(() => {
+    if (currentHall.movie) {
+      setCurrentMovie(currentHall.movie.title);
+    } else {
+      setCurrentMovie("");
+    }
+  }, [currentHall]);
 
   const requestMovies = () => {
     API.get(`search/movie`, {
@@ -38,20 +44,20 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
       .catch((err) =>
         setFoundedMovies([{ title: "Попробуйте иначе", id: 100002 }])
       );
-  }
+  };
 
   const debouncedOnChange = debounce(requestMovies, 400);
 
   const setCurrentHallMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentMovie(e.target.value)
-    debouncedOnChange()
+    setCurrentMovie(e.target.value);
+    debouncedOnChange();
   };
 
   const itemClickHandler = (key: number) => {
-    const movie: any = foundedMovies.find((movie: IMovie) => movie.id === key)
+    const movie: any = foundedMovies.find((movie: IMovie) => movie.id === key);
 
-    setCurrentMovie(movie.title)
-    setMovie(currentHall, movie)
+    setCurrentMovie(movie.title);
+    setMovie(currentHall, movie);
     setIsEdit(!isEdit);
   };
 
@@ -93,7 +99,8 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
           </form>
         ) : (
           <span>
-            "{!currentHall.movie ? "Введите название" : currentHall.movie.title}"
+            "{!currentHall.movie ? "Введите название" : currentHall.movie.title}
+            "
           </span>
         )}
         <button

@@ -1,15 +1,15 @@
 import { FC, memo } from "react";
-import { imageBase } from "../../api/api";
-import { IMovie } from "../../types/hall";
 
-interface MovieDescProps {
-  currentMovie?: IMovie | null
+import { imageBase } from "api/api";
+
+import { IMovie } from "types/hall";
+
+interface MovieDescriptionProps {
+  currentMovie?: IMovie | null;
 }
 
-const MovieDescription:FC<MovieDescProps> = ({ currentMovie }) => {
-  if (!currentMovie) {
-    return null;
-  }
+const MovieDescription: FC<MovieDescriptionProps> = ({ currentMovie }) => {
+  if (!currentMovie) return null;
 
   return (
     <div className="films">
@@ -30,4 +30,4 @@ const MovieDescription:FC<MovieDescProps> = ({ currentMovie }) => {
   );
 };
 
-export const MemoMovieDescription = memo(MovieDescription);
+export const MemoizedMovieDescription = memo(MovieDescription);

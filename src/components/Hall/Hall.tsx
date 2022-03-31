@@ -1,30 +1,27 @@
-import { useContext, useLayoutEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import { useActions } from "../../hooks/useActions";
-import { MemoMovieDescription } from "../Aside/MovieDescription";
-import MainLayout from "../../UI/MainLayout";
-import Statistic from "../Aside/Statistic";
-import Header from "../Main/Header";
-import SearchHeader from "./SearchHeader";
-import Seat from "./utils/Seat";
-import SeatSettingModal from "./utils/SeatSettingModal";
-import { FC } from "react";
-import { IHall, ISeat } from "../../types/hall";
-import { useTypeSelector } from "../../hooks/useTypeSelector";
+import { FC, useContext, useLayoutEffect, useState } from "react";
+import { Link, NavLink, useParams } from "react-router-dom";
+
+import { AuthContext } from "context/AuthContext";
+import { useActions } from "hooks/useActions";
+import { useTypedSelector } from "hooks/useTypedSelector";
+
+import { IHall, ISeat } from "types/hall";
+
+import { MemoizedMovieDescription } from "components/Aside/MovieDescription";
+import Statistic from "components/Aside/Statistic";
+import Header from "components/Main/Header";
+import SearchHeader from "components/Hall/SearchHeader";
+import Seat from "components/Hall/utils/Seat";
+import SeatSettingModal from "components/Hall/utils/SeatSettingModal";
 
 const Hall: FC = () => {
   const { id: hallId } = useParams();
-  const { halls } = useTypeSelector(state => state.hallReducer);
-  const [currentHall, setCurrentHall] = useState<IHall>(halls[0]);
-  const [currentSeat, setCurrentSeat] = useState<ISeat>(currentHall.seats[0]);
+  const { halls } = useTypedSelector((state) => state.hallReducer);
+  const [currentHall, setCurrentHall] = useState<IHall | null>(null);
+  const [currentSeat, setCurrentSeat] = useState<ISeat | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const { reserveSeat, editSeatPrice } = useActions();
   const [auth] = useContext(AuthContext);
-
-  useLayoutEffect(() => {
-    setCurrentHall(halls.find((hall) => hall.id === hallId)!);
-  }, [hallId, halls]);
 
   const reserveSeatLocal = (id: string) => {
     return () => reserveSeat(currentHall, id);
@@ -39,12 +36,13 @@ const Hall: FC = () => {
   const editSeatPriceLocal = (id: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const price = validatePrice(e.target.value);
-      setCurrentSeat({ ...currentSeat, price: price });
+      currentSeat && setCurrentSeat({ ...currentSeat, price: price });
       editSeatPrice(currentHall, id, price);
     };
   };
 
   const openModal = (key: string) => {
+    if (!currentHall) return;
     return (e: any) => {
       e.stopPropagation();
       currentHall.seats.map((seat: ISeat) => {
@@ -61,17 +59,28 @@ const Hall: FC = () => {
     setModalOpen(false);
   };
 
-  if (Object.keys(currentHall).length === 0) {
-    return null;
+  useLayoutEffect(() => {
+    setCurrentHall(halls.find((hall) => hall.id === hallId)!);
+  }, [hallId, halls]);
+
+  if (!currentHall) {
+    return (
+      <div>
+        упс,{" "}
+        <NavLink to={"/"} style={{ color: "#6fcefd" }}>
+          домой
+        </NavLink>
+      </div>
+    );
   }
 
   return (
-    <MainLayout>
+    <>
       <Header title={currentHall.title} />
 
       <aside>
-        <MemoMovieDescription currentMovie={currentHall.movie} />
-        <Statistic halls={halls} currentHall={currentHall} />
+        <MemoizedMovieDescription currentMovie={currentHall.movie} />
+        <Statistic currentHall={currentHall} />
       </aside>
 
       <div className="content">
@@ -115,7 +124,7 @@ const Hall: FC = () => {
         currentSeat={currentSeat}
         editSeatPrice={editSeatPriceLocal}
       />
-    </MainLayout>
+    </>
   );
 };
 
