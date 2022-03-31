@@ -1,6 +1,22 @@
-import Modal from "../../../UI/modal/Modal";
+import { FC } from "react";
 
-const SeatSettingModal = ({ open, closeModal, editSeatPrice, currentSeat }) => {
+import { ISeat } from "types/hall";
+import Modal from "UI/modal/Modal";
+
+interface SeatSettingModalProps {
+  open: boolean;
+  closeModal: () => void;
+  editSeatPrice: (id: string) => any;
+  currentSeat: ISeat | null;
+}
+
+const SeatSettingModal: FC<SeatSettingModalProps> = ({
+  open,
+  closeModal,
+  editSeatPrice,
+  currentSeat,
+}) => {
+  if (!currentSeat) return null;
   const { seatNumber, reserved, price, id } = currentSeat;
 
   return (

@@ -1,27 +1,42 @@
+import { FC, useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { API } from "../../api/api";
-import { api_key } from "../../config";
 
-const SearchHeader = ({ currentHall }) => {
-  const dispatch = useDispatch();
+import { IHall, IMovie } from "types/hall";
 
-  const [isEdit, setIsEdit] = useState(false);
-  const [foundedMovies, setFoundedMovies] = useState([]);
-  const inputEl = useRef(null);
+import { API } from "api/api";
+import { api_key } from "config";
+import { useActions } from "hooks/useActions";
+
+interface SearchHeaderProps {
+  currentHall: IHall;
+}
+
+const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [currentMovie, setCurrentMovie] = useState<string>("");
+  const [foundedMovies, setFoundedMovies] = useState<IMovie[]>([]);
+  const inputEl = useRef<HTMLInputElement>(null);
+  const { setMovie } = useActions();
 
   useEffect(() => {
-    if (isEdit) {
+    if (inputEl) {
       inputEl?.current?.focus();
     }
   });
 
-  const setCurrentHallMovie = (event) => {
+  useEffect(() => {
+    if (currentHall.movie) {
+      setCurrentMovie(currentHall.movie.title);
+    } else {
+      setCurrentMovie("");
+    }
+  }, [currentHall]);
+
+  const requestMovies = () => {
     API.get(`search/movie`, {
       params: {
         api_key,
-        query: event.target.value,
+        query: currentMovie,
         language: "ru-RU",
       },
     })
@@ -31,14 +46,18 @@ const SearchHeader = ({ currentHall }) => {
       );
   };
 
-  const debouncedOnChange = debounce(setCurrentHallMovie, 400);
+  const debouncedOnChange = debounce(requestMovies, 400);
 
-  const itemClickHandler = (key) => {
-    let updatedHall = {
-      ...currentHall,
-      movie: foundedMovies.find((movie) => movie.id === key),
-    };
-    dispatch({ type: "EDIT_HALL", payload: updatedHall });
+  const setCurrentHallMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentMovie(e.target.value);
+    debouncedOnChange();
+  };
+
+  const itemClickHandler = (key: number) => {
+    const movie: any = foundedMovies.find((movie: IMovie) => movie.id === key);
+
+    setCurrentMovie(movie.title);
+    setMovie(currentHall, movie);
     setIsEdit(!isEdit);
   };
 
@@ -50,15 +69,16 @@ const SearchHeader = ({ currentHall }) => {
           <form className="search_form">
             <input
               type="text"
-              onChange={debouncedOnChange}
+              onChange={setCurrentHallMovie}
               className="cinema-name__input"
+              value={currentMovie}
               maxLength={20}
               ref={inputEl}
             ></input>
 
             <ul className="autocomplete">
               {isEdit
-                ? foundedMovies.map((movie) => {
+                ? foundedMovies.map((movie: IMovie) => {
                     return (
                       <li
                         key={movie.id}

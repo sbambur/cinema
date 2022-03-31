@@ -1,47 +1,50 @@
-import { MainLayout } from "../../UI/MainLayout";
-import { MoviesList } from "../Aside/MoviesList";
-import HallCard from "../Hall/HallCard";
-import { useContext, useState } from "react";
-import Header from "./Header";
-import Statistic from "../Aside/Statistic";
-import CreateHall from "../Hall/CreateHall";
-import CreateHallModal from "../Hall/utils/CreateHallModal";
-import BaseSettingsModal from "../Aside/utils/BaseSettingsModal";
-import { useSelector } from "react-redux";
-import { AuthContext } from "../../store/AuthContext";
+import { FC, useContext, useState } from "react";
 
-export const Main = () => {
-  const { halls } = useSelector((state) => state.hallReducer);
+import { useTypedSelector } from "hooks/useTypedSelector";
+import { AuthContext } from "context/AuthContext";
+
+import { MoviesList } from "components/Aside/MoviesList";
+import Statistic from "components/Aside/Statistic";
+import Header from "components/Main/Header";
+import HallCard from "components/Hall/HallCard";
+import CreateHall from "components/Hall/CreateHall";
+import CreateHallModal from "components/Hall/utils/CreateHallModal";
+import BaseSettingsModal from "components/Aside/utils/BaseSettingsModal";
+
+interface isModalOpenState {
+  hallModal: boolean;
+  settingsModal: boolean;
+}
+
+const Main: FC = () => {
+  const { halls } = useTypedSelector((state) => state.hallReducer);
   const [basePrice, setBasePrice] = useState(120);
-  const [isModalOpen, setModalOpen] = useState({
+  const [auth, setAuth] = useContext(AuthContext);
+  const [isModalOpen, setModalOpen] = useState<isModalOpenState>({
     hallModal: false,
     settingsModal: false,
   });
 
-  const [auth, setAuth] = useContext(AuthContext);
-
-  const openModal = (modalName, isOpen) => {
+  const openModal = (modalName: string, isOpen: boolean) => {
     return () => {
       setModalOpen({ ...isModalOpen, [modalName]: isOpen });
     };
   };
 
   const closeModal = () => {
-    for (let key in isModalOpen) {
-      setModalOpen((isModalOpen[key] = false));
-    }
+    setModalOpen({ hallModal: false, settingsModal: false });
   };
 
   return (
-    <MainLayout>
+    <>
       <Header />
 
       <aside>
         <button onClick={() => setAuth(!auth)} className="create_hall_button">
           {auth ? "Log out" : "Login"}
         </button>
-        <MoviesList halls={halls} />
-        <Statistic halls={halls} />
+        <MoviesList />
+        <Statistic />
         {auth ? (
           <button
             className="create_hall_button"
@@ -60,7 +63,7 @@ export const Main = () => {
                 key={hall.id}
                 id={hall.id}
                 title={hall.title}
-                movie={hall.movie ? hall.movie.title : "Введите название"}
+                movie={hall.movie ? hall.movie.title : "Фильм не выбран"}
                 link={hall.id}
               />
             );
@@ -80,6 +83,8 @@ export const Main = () => {
         closeModal={closeModal}
         open={isModalOpen.hallModal}
       />
-    </MainLayout>
+    </>
   );
 };
+
+export default Main;

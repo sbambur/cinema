@@ -1,10 +1,21 @@
+import { FC } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
+
+import { useTypedSelector } from "hooks/useTypedSelector";
+
+import { MovieItem } from "components/Aside/utils/MovieItem";
+
 import "swiper/css";
 import "swiper/css/pagination";
-import { imageBase } from "../../api/api";
 
-export const MoviesList = ({ halls }) => {
+export const MoviesList: FC = () => {
+  const { halls } = useTypedSelector((state) => state.hallReducer);
+
+  const listMovies = halls.filter(({ movie }) => Boolean(movie));
+
+  if (!listMovies.length) return null;
+
   return (
     <div className="films">
       <div className="films__header">Фильмы</div>
@@ -19,20 +30,12 @@ export const MoviesList = ({ halls }) => {
             if (!hall.movie) {
               return null;
             }
-
             return (
               <SwiperSlide key={hall.movie.id}>
-                <div className="films_item">
-                  <div className="film_poster">
-                    <img
-                      src={`${imageBase}${hall.movie.poster_path}`}
-                      alt={hall.movie.title}
-                    />
-                  </div>
-                  <div className="film_overview">
-                    <p>{hall.movie.title}</p>
-                  </div>
-                </div>
+                <MovieItem
+                  title={hall.movie.title}
+                  poster={hall.movie.poster_path}
+                />
               </SwiperSlide>
             );
           })}
