@@ -8,6 +8,7 @@ import { MovieItem } from "components/Aside/utils/MovieItem";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { SideHeader, MoviesListSlider } from "components/Aside/styles";
 
 export const MoviesList: FC = () => {
   const { halls } = useTypedSelector((state) => state.hallReducer);
@@ -17,9 +18,9 @@ export const MoviesList: FC = () => {
   if (!listMovies.length) return null;
 
   return (
-    <div className="films">
-      <div className="films__header">Фильмы</div>
-      <div className="films__list">
+    <div>
+      <SideHeader>Фильмы</SideHeader>
+      <MoviesListSlider>
         <Swiper
           modules={[Pagination]}
           spaceBetween={50}
@@ -40,7 +41,7 @@ export const MoviesList: FC = () => {
             );
           })}
         </Swiper>
-      </div>
+      </MoviesListSlider>
     </div>
   );
 };

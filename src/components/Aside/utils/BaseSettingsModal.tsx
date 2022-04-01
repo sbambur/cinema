@@ -2,6 +2,8 @@ import { FC, useRef } from "react";
 
 import Modal from "UI/modal/Modal";
 
+import { ModalInput } from "UI/modal/styles";
+
 interface BaseSettingsModalProps {
   basePrice: number;
   open: boolean;
@@ -24,15 +26,13 @@ const BaseSettingsModal: FC<BaseSettingsModalProps> = ({
 
   return (
     <Modal open={open} onClose={closeModal}>
-      <form>
-        <p>Начальная цена билета:</p>
-        <input
-          type="number"
-          ref={inputElCount}
-          value={basePrice}
-          onChange={basePriceChange}
-        />
-      </form>
+      <p>Начальная цена билета:</p>
+      <ModalInput
+        type="number"
+        ref={inputElCount}
+        value={basePrice}
+        onChange={basePriceChange}
+      />
     </Modal>
   );
 };

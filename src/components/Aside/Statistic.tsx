@@ -5,6 +5,8 @@ import { IHall } from "types/hall";
 import { getHallsStat } from "components/Aside/utils/calculateStatistic";
 import { useTypedSelector } from "hooks/useTypedSelector";
 
+import { SideHeader, StatisticContainer } from "components/Aside/styles";
+
 interface StatisticProps {
   currentHall?: IHall;
 }
@@ -36,9 +38,9 @@ const Statistic: FC<StatisticProps> = ({ currentHall }) => {
   }, [halls, currentHall]);
 
   return (
-    <div className="statistic">
-      <div className="statistic__header">Информация</div>
-      <div className="statistic__info">
+    <StatisticContainer>
+      <SideHeader>Информация</SideHeader>
+      <div>
         <p>
           Всего мест: <span>{stat.total}</span>
         </p>
@@ -52,7 +54,7 @@ const Statistic: FC<StatisticProps> = ({ currentHall }) => {
           Выручка: <span>{stat.sum}</span>₽
         </p>
       </div>
-    </div>
+    </StatisticContainer>
   );
 };
 

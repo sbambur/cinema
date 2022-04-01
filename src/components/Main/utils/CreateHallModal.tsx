@@ -5,6 +5,9 @@ import { useForm } from "react-hook-form";
 
 import { useTypedSelector } from "hooks/useTypedSelector";
 
+import { Button } from "styles/components";
+import { ErrorMessage, ModalInput } from "UI/modal/styles";
+
 interface CreateHallModalProps {
   basePrice: number;
   open: boolean;
@@ -38,7 +41,7 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
     <Modal open={open} onClose={closeModal}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <p>Название зала:</p>
-        <input
+        <ModalInput
           {...register("title", {
             required: true,
             maxLength: 20,
@@ -47,17 +50,17 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
           name="title"
         />
         {errors.title && errors.title.type === "required" && (
-          <span>Это поле обязательно"</span>
+          <ErrorMessage>Это поле обязательно</ErrorMessage>
         )}
         {errors.title && errors.title.type === "maxLength" && (
-          <span>Слишком длинное название</span>
+          <ErrorMessage>Слишком длинное название</ErrorMessage>
         )}
         {errors.title && errors.title.type === "validate" && (
-          <span>Такое название уже есть</span>
+          <ErrorMessage>Такое название уже есть</ErrorMessage>
         )}
 
         <p>Количество мест:</p>
-        <input
+        <ModalInput
           type="number"
           {...register("count", {
             required: true,
@@ -67,16 +70,16 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
           name="count"
         />
         {errors.count && errors.count.type === "required" && (
-          <span>Это поле обязательно</span>
+          <ErrorMessage>Это поле обязательно</ErrorMessage>
         )}
         {errors.count && errors.count.type === "min" && (
-          <span>Слишком мало</span>
+          <ErrorMessage>Слишком мало</ErrorMessage>
         )}
         {errors.count && errors.count.type === "max" && (
-          <span>Слишком много</span>
+          <ErrorMessage>Слишком много</ErrorMessage>
         )}
         <p>Цена билета:</p>
-        <input
+        <ModalInput
           defaultValue={basePrice}
           type="number"
           {...register("price", {
@@ -86,11 +89,8 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
           })}
           name="price"
         />
-        {errors.price && <span>Неверная цена</span>}
-        <div>
-          <br />
-          <input type="submit" value="Создать" />
-        </div>
+        {errors.price && <ErrorMessage>Неверная цена</ErrorMessage>}
+        <Button type="submit">Создать</Button>
       </form>
     </Modal>
   );

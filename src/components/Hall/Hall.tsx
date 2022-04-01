@@ -1,5 +1,5 @@
 import { FC, useContext, useLayoutEffect, useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { AuthContext } from "context/AuthContext";
 import { useActions } from "hooks/useActions";
@@ -9,10 +9,14 @@ import { IHall, ISeat } from "types/hall";
 
 import { MemoizedMovieDescription } from "components/Aside/MovieDescription";
 import Statistic from "components/Aside/Statistic";
-import Header from "components/Main/Header";
+import Header from "components/Header";
 import SearchHeader from "components/Hall/SearchHeader";
 import Seat from "components/Hall/utils/Seat";
 import SeatSettingModal from "components/Hall/utils/SeatSettingModal";
+
+import { Aside, ContentContainer } from "components/Main/styles";
+import { StyledLink } from "styles/components";
+import { ButtonSeatEdit, CinemaHall, SeatItem } from "components/Hall/styles";
 
 const Hall: FC = () => {
   const { id: hallId } = useParams();
@@ -66,10 +70,7 @@ const Hall: FC = () => {
   if (!currentHall) {
     return (
       <div>
-        упс,{" "}
-        <NavLink to={"/"} style={{ color: "#6fcefd" }}>
-          домой
-        </NavLink>
+        упс, <StyledLink to={"/"}>домой</StyledLink>
       </div>
     );
   }
@@ -78,45 +79,37 @@ const Hall: FC = () => {
     <>
       <Header title={currentHall.title} />
 
-      <aside>
+      <Aside>
         <MemoizedMovieDescription currentMovie={currentHall.movie} />
         <Statistic currentHall={currentHall} />
-      </aside>
+      </Aside>
 
-      <div className="content">
-        <div className="hall_list">
-          <div className="current_hall">
-            <Link to="/" className="create_hall_button">
-              Назад
-            </Link>
+      <ContentContainer>
+        <StyledLink to="/">Назад</StyledLink>
 
-            <SearchHeader currentHall={currentHall} />
-            <div className="cinema-hall">
-              {currentHall.seats.map((seat) => {
-                return (
-                  <Seat key={seat.id}>
-                    <div
-                      className={`seat ${seat.reserved ? "active" : ""}`}
-                      onClick={reserveSeatLocal(seat.id)}
-                    >
-                      {seat.seatNumber}
-                      <p>{seat.price}₽</p>
-                      {auth ? (
-                        <button
-                          className="edit_seat_button"
-                          onClick={openModal(seat.id)}
-                        >
-                          Edit
-                        </button>
-                      ) : null}
-                    </div>
-                  </Seat>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
+        <SearchHeader currentHall={currentHall} />
+
+        <CinemaHall>
+          {currentHall.seats.map((seat) => {
+            return (
+              <Seat key={seat.id}>
+                <SeatItem
+                  $reserved={seat.reserved}
+                  onClick={reserveSeatLocal(seat.id)}
+                >
+                  {seat.seatNumber}
+                  <p>{seat.price}₽</p>
+                  {auth ? (
+                    <ButtonSeatEdit onClick={openModal(seat.id)}>
+                      Edit
+                    </ButtonSeatEdit>
+                  ) : null}
+                </SeatItem>
+              </Seat>
+            );
+          })}
+        </CinemaHall>
+      </ContentContainer>
 
       <SeatSettingModal
         open={isModalOpen}
