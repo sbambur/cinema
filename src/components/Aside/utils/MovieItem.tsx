@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import { imageBase } from "api/api";
+import { MoviesItem, MoviePoster } from "components/Aside/styles";
 
 interface MovieItemProps {
   title: string;
@@ -9,13 +10,13 @@ interface MovieItemProps {
 
 export const MovieItem: FC<MovieItemProps> = ({ poster, title }) => {
   return (
-    <div className="films_item">
-      <div className="film_poster">
+    <MoviesItem>
+      <MoviePoster>
         {poster ? <img src={`${imageBase}${poster}`} alt={title} /> : null}
-      </div>
-      <div className="film_overview">
+      </MoviePoster>
+      <div>
         <p>{title}</p>
       </div>
-    </div>
+    </MoviesItem>
   );
 };

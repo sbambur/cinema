@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import "../../css/modal.css";
+import * as S from "UI/modal/styles";
 
 interface ModalProps {
   open: boolean;
@@ -16,11 +16,11 @@ const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
   return (
     modalElement &&
     createPortal(
-      <div className="modal_background" onClick={onClose}>
-        <div className="modal_window" onClick={(e) => e.stopPropagation()}>
+      <S.ModalModel onClick={onClose}>
+        <S.ModalContainer onClick={(e) => e.stopPropagation()}>
           {children}
-        </div>
-      </div>,
+        </S.ModalContainer>
+      </S.ModalModel>,
       modalElement
     )
   );

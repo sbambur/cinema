@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { ModalInput } from "UI/modal/styles";
 
 import { ISeat } from "types/hall";
 import Modal from "UI/modal/Modal";
@@ -25,7 +26,11 @@ const SeatSettingModal: FC<SeatSettingModalProps> = ({
       <p>Статус: {reserved ? "Забронировано" : "Свободно"}</p>
       <p>
         Цена:
-        <input type="number" value={price} onChange={editSeatPrice(id)}></input>
+        <ModalInput
+          type="number"
+          value={price}
+          onChange={editSeatPrice(id)}
+        ></ModalInput>
       </p>
     </Modal>
   );

@@ -7,6 +7,8 @@ import { API } from "api/api";
 import { api_key } from "config";
 import { useActions } from "hooks/useActions";
 
+import * as S from "components/Hall/styles/searchHeader";
+
 interface SearchHeaderProps {
   currentHall: IHall;
 }
@@ -62,55 +64,47 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
   };
 
   return (
-    <div className="cinema-name">
-      <div className="cinema-name__header">
-        Фильм&nbsp;
-        {isEdit ? (
-          <form className="search_form">
-            <input
-              type="text"
-              onChange={setCurrentHallMovie}
-              className="cinema-name__input"
-              value={currentMovie}
-              maxLength={20}
-              ref={inputEl}
-            ></input>
+    <S.CinemaHeader>
+      Фильм&nbsp;
+      {isEdit ? (
+        <S.SearchForm>
+          <S.SearchInput
+            type="text"
+            onChange={setCurrentHallMovie}
+            value={currentMovie}
+            maxLength={20}
+            ref={inputEl}
+          ></S.SearchInput>
 
-            <ul className="autocomplete">
-              {isEdit
-                ? foundedMovies.map((movie: IMovie) => {
-                    return (
-                      <li
-                        key={movie.id}
-                        className="autocomplete__item"
-                        onClick={() => itemClickHandler(movie.id)}
-                      >
-                        {movie.title}
-                        <span>
-                          {movie.release_date
-                            ? `${movie.release_date.substr(0, 4)}г.`
-                            : null}
-                        </span>
-                      </li>
-                    );
-                  })
-                : null}
-            </ul>
-          </form>
-        ) : (
-          <span>
-            "{!currentHall.movie ? "Введите название" : currentHall.movie.title}
-            "
-          </span>
-        )}
-        <button
-          className={`cinema-name__edit_btn ${isEdit ? "active" : ""}`}
-          onClick={() => setIsEdit(!isEdit)}
-        >
-          {isEdit ? "Сохранить" : "Изменить"}
-        </button>
-      </div>
-    </div>
+          <S.AutocompleteList>
+            {isEdit
+              ? foundedMovies.map((movie: IMovie) => {
+                  return (
+                    <li
+                      key={movie.id}
+                      onClick={() => itemClickHandler(movie.id)}
+                    >
+                      {movie.title}
+                      <span>
+                        {movie.release_date
+                          ? `${movie.release_date.substr(0, 4)}г.`
+                          : null}
+                      </span>
+                    </li>
+                  );
+                })
+              : null}
+          </S.AutocompleteList>
+        </S.SearchForm>
+      ) : (
+        <span>
+          "{!currentHall.movie ? "Введите название" : currentHall.movie.title}"
+        </span>
+      )}
+      <S.ToggleButton $edit={isEdit} onClick={() => setIsEdit(!isEdit)}>
+        {isEdit ? "Сохранить" : "Изменить"}
+      </S.ToggleButton>
+    </S.CinemaHeader>
   );
 };
 

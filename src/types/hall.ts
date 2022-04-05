@@ -1,8 +1,18 @@
+interface IPos {
+  row: string;
+  seat: string;
+}
+
 export interface ISeat {
   id: string;
   seatNumber: number;
   price: number;
   reserved: boolean;
+  pos: IPos;
+  height: number;
+  width: number;
+  x: number;
+  y: number;
 }
 
 export interface IMovie {

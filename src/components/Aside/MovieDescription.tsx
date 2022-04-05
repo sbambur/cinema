@@ -4,6 +4,8 @@ import { imageBase } from "api/api";
 
 import { IMovie } from "types/hall";
 
+import { SideHeader, MovieItem, MoviePoster } from "components/Aside/styles";
+
 interface MovieDescriptionProps {
   currentMovie?: IMovie | null;
 }
@@ -13,19 +15,19 @@ const MovieDescription: FC<MovieDescriptionProps> = ({ currentMovie }) => {
 
   return (
     <div className="films">
-      <div className="films__header">Фильм</div>
-      <div className="film_item">
-        <div className="film_poster">
+      <SideHeader>Фильм</SideHeader>
+      <MovieItem>
+        <MoviePoster>
           <img
             src={`${imageBase}${currentMovie.poster_path}`}
             alt={currentMovie.title}
           />
-        </div>
-        <div className="film_overview">
+        </MoviePoster>
+        <div>
           <p>{currentMovie.title}</p>
           <p>{currentMovie.overview}</p>
         </div>
-      </div>
+      </MovieItem>
     </div>
   );
 };

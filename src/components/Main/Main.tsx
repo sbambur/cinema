@@ -5,11 +5,14 @@ import { AuthContext } from "context/AuthContext";
 
 import { MoviesList } from "components/Aside/MoviesList";
 import Statistic from "components/Aside/Statistic";
-import Header from "components/Main/Header";
-import HallCard from "components/Hall/HallCard";
-import CreateHall from "components/Hall/CreateHall";
-import CreateHallModal from "components/Hall/utils/CreateHallModal";
+import Header from "components/Header";
+import { MemoizedHallCard } from "components/Main/HallCard";
+import CreateHall from "components/Main/CreateHall";
+import CreateHallModal from "components/Main/utils/CreateHallModal";
 import BaseSettingsModal from "components/Aside/utils/BaseSettingsModal";
+
+import { Button, Controls, StyledLink } from "styles/components";
+import { HallList, ContentContainer, Aside } from "components/Main/styles";
 
 interface isModalOpenState {
   hallModal: boolean;
@@ -39,38 +42,45 @@ const Main: FC = () => {
     <>
       <Header />
 
-      <aside>
-        <button onClick={() => setAuth(!auth)} className="create_hall_button">
+      <Aside>
+        <Button onClick={() => setAuth(!auth)}>
           {auth ? "Log out" : "Login"}
-        </button>
+        </Button>
         <MoviesList />
         <Statistic />
-        {auth ? (
-          <button
-            className="create_hall_button"
-            onClick={openModal("settingsModal", true)}
-          >
-            Настройки
-          </button>
-        ) : null}
-      </aside>
+        <Controls>
+          {auth ? (
+            <Button onClick={openModal("settingsModal", true)}>
+              Настройки
+            </Button>
+          ) : null}
+          <StyledLink to="settings">Страница настройки</StyledLink>
+        </Controls>
+      </Aside>
 
-      <div className="content">
-        <div className="hall_list">
+      <ContentContainer>
+        <HallList>
           {halls.map((hall) => {
             return (
-              <HallCard
+              <MemoizedHallCard
                 key={hall.id}
                 id={hall.id}
                 title={hall.title}
                 movie={hall.movie ? hall.movie.title : "Фильм не выбран"}
                 link={hall.id}
+                poster={
+                  hall.movie
+                    ? hall.movie.backdrop_path
+                      ? hall.movie.backdrop_path
+                      : ""
+                    : ""
+                }
               />
             );
           })}
           {auth ? <CreateHall openModal={openModal} /> : null}
-        </div>
-      </div>
+        </HallList>
+      </ContentContainer>
 
       <BaseSettingsModal
         basePrice={basePrice}

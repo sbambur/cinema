@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { HallItemCreate } from "components/Main/styles";
 
 interface CreateHallProps {
   openModal: (name: string, isOpen: boolean) => any;
@@ -6,9 +7,7 @@ interface CreateHallProps {
 
 const CreateHall: FC<CreateHallProps> = ({ openModal }) => {
   return (
-    <div className="hall_list__item add_hall" onClick={openModal("hallModal", true)}>
-      <div className="hall_item">+</div>
-    </div>
+    <HallItemCreate onClick={openModal("hallModal", true)}>+</HallItemCreate>
   );
 };
 
