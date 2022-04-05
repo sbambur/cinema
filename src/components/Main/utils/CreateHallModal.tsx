@@ -65,7 +65,7 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
           {...register("count", {
             required: true,
             min: 1,
-            max: 99,
+            max: 10000,
           })}
           name="count"
         />

@@ -1,20 +1,15 @@
-import Header from "components/Header";
-
 import { Aside, ContentContainer } from "components/Main/styles";
-import { StyledLink } from "styles/components";
+import { HallHeader, StyledLink } from "styles/components";
 
 const Settings = () => {
   return (
     <>
-      <Header />
+      <HallHeader>Настройки</HallHeader>
 
       <Aside></Aside>
 
       <ContentContainer>
         <div>
-          <h1>Страница настройки</h1>
-          <br />
-
           <StyledLink to="/">Назад</StyledLink>
         </div>
       </ContentContainer>

@@ -3,20 +3,26 @@ import { Button } from "styles/components";
 import { baseTheme } from "styles/theme";
 
 export const CinemaHall = styled.div`
+  position: relative;
   margin: 70px auto 20px;
   display: flex;
-  max-width: 700px;
+  width: 695px;
+  height: 375px;
   flex-wrap: wrap;
   justify-content: center;
 `;
 
 interface SeatItemProps {
   $reserved: boolean;
+  $x: number;
+  $y: number;
+  $height: number;
+  $width: number;
 }
 
 export const SeatItem = styled.div<SeatItemProps>`
   cursor: pointer;
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,6 +31,8 @@ export const SeatItem = styled.div<SeatItemProps>`
   padding: 5px;
   margin: 5px;
   text-align: right;
+  top: ${({ $y }) => $y}px;
+  right: ${({ $x }) => $x}px;
   border-radius: ${baseTheme.borderRadius};
   background-color: ${({ $reserved }) =>
     $reserved ? baseTheme.colors.success : baseTheme.colors.primary};

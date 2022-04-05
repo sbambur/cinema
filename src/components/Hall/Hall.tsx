@@ -1,21 +1,23 @@
 import { FC, useContext, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Collection } from "react-virtualized";
+import "react-virtualized/styles.css";
 
-import { AuthContext } from "context/AuthContext";
 import { useActions } from "hooks/useActions";
+import { AuthContext } from "context/AuthContext";
 import { useTypedSelector } from "hooks/useTypedSelector";
 
 import { IHall, ISeat } from "types/hall";
 
-import { MemoizedMovieDescription } from "components/Aside/MovieDescription";
-import Statistic from "components/Aside/Statistic";
 import Header from "components/Header";
-import SearchHeader from "components/Hall/SearchHeader";
 import Seat from "components/Hall/utils/Seat";
+import Statistic from "components/Aside/Statistic";
+import SearchHeader from "components/Hall/SearchHeader";
 import SeatSettingModal from "components/Hall/utils/SeatSettingModal";
+import { MemoizedMovieDescription } from "components/Aside/MovieDescription";
 
-import { Aside, ContentContainer } from "components/Main/styles";
 import { StyledLink } from "styles/components";
+import { Aside, ContentContainer } from "components/Main/styles";
 import { ButtonSeatEdit, CinemaHall, SeatItem } from "components/Hall/styles";
 
 const Hall: FC = () => {
@@ -65,6 +67,7 @@ const Hall: FC = () => {
 
   useLayoutEffect(() => {
     setCurrentHall(halls.find((hall) => hall.id === hallId)!);
+    // console.log(JSON.stringify(currentHall));
   }, [hallId, halls]);
 
   if (!currentHall) {
@@ -73,6 +76,38 @@ const Hall: FC = () => {
         упс, <StyledLink to={"/"}>домой</StyledLink>
       </div>
     );
+  }
+
+  function cellRenderer({ index }: any) {
+    let seat = currentHall!.seats[index];
+    return (
+      <Seat key={seat.id}>
+        <SeatItem
+          $x={seat.x}
+          $y={seat.y}
+          $height={seat.height}
+          $width={seat.width}
+          $reserved={seat.reserved}
+          onClick={reserveSeatLocal(seat.id)}
+        >
+          {seat.pos.seat}
+          <p>{seat.price}₽</p>
+          {auth ? (
+            <ButtonSeatEdit onClick={openModal(seat.id)}>Edit</ButtonSeatEdit>
+          ) : null}
+        </SeatItem>
+      </Seat>
+    );
+  }
+
+  function cellSizeAndPositionGetter({ index }: any) {
+    const datum = currentHall!.seats[index];
+    return {
+      height: datum.height,
+      width: datum.width,
+      x: datum.x,
+      y: datum.y,
+    };
   }
 
   return (
@@ -88,26 +123,15 @@ const Hall: FC = () => {
         <StyledLink to="/">Назад</StyledLink>
 
         <SearchHeader currentHall={currentHall} />
-
+        <div>{currentHall.date}</div>
         <CinemaHall>
-          {currentHall.seats.map((seat) => {
-            return (
-              <Seat key={seat.id}>
-                <SeatItem
-                  $reserved={seat.reserved}
-                  onClick={reserveSeatLocal(seat.id)}
-                >
-                  {seat.seatNumber}
-                  <p>{seat.price}₽</p>
-                  {auth ? (
-                    <ButtonSeatEdit onClick={openModal(seat.id)}>
-                      Edit
-                    </ButtonSeatEdit>
-                  ) : null}
-                </SeatItem>
-              </Seat>
-            );
-          })}
+          <Collection
+            cellCount={currentHall.seats.length}
+            cellRenderer={cellRenderer}
+            cellSizeAndPositionGetter={cellSizeAndPositionGetter}
+            height={375}
+            width={695}
+          />
         </CinemaHall>
       </ContentContainer>
 

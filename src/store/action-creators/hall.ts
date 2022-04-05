@@ -9,11 +9,24 @@ export interface createHallType {
 }
 
 const generateSeats = (length: number, basePrice: string): any[] => {
+  let rowPos = 0;
+  let seatPos = 0;
+  let xPos = 85;
+  let yPos = 75;
+
   let content = Array.from({ length }, (a, i) => ({
     id: uuidv4(),
     seatNumber: i + 1,
     price: Number(basePrice),
     reserved: false,
+    pos: {
+      row: seatPos % 8 || seatPos === 1 ? rowPos : ++rowPos,
+      seat: seatPos >= 8 ? (seatPos = 1) : ++seatPos,
+    },
+    height: 65,
+    width: 75,
+    x: xPos * seatPos - xPos,
+    y: yPos * rowPos - yPos,
   }));
 
   return content;
