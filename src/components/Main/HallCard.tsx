@@ -4,7 +4,7 @@ import { useActions } from "hooks/useActions";
 import { AuthContext } from "context/AuthContext";
 
 import { ButtonDel, Controls, StyledLink } from "styles/components";
-import { HallItem } from "components/Main/styles";
+import { HallItem, HallItemContent, HallItemPoster, } from "components/Main/styles";
 
 interface HallCardProps {
   link: string;
@@ -25,15 +25,17 @@ const HallCard: FC<HallCardProps> = ({ link, title, movie, id, poster }) => {
   };
 
   return (
-    <HallItem $poster={poster}>
-      <p>Зал: {title}</p>
-      <p>
-        <b>{movie}</b>
-      </p>
-      <Controls>
-        <StyledLink to={"hall/" + link}>Изменить</StyledLink>
-        {auth ? <ButtonDel onClick={handleClick(id)}>Удалить</ButtonDel> : null}
-      </Controls>
+    <HallItem >
+      {poster && <HallItemPoster $poster={poster} />}
+      <HallItemContent>
+        <p>Зал: {title}</p>
+        <p>
+          <b>{movie}</b>
+        </p>
+        <Controls>
+          <StyledLink to={"hall/" + link}>Изменить</StyledLink>
+          {auth ? <ButtonDel onClick={handleClick(id)}>Удалить</ButtonDel> : null}
+        </Controls></HallItemContent>
     </HallItem>
   );
 };

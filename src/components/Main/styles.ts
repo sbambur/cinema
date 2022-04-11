@@ -21,20 +21,35 @@ export const HallList = styled.div`
   grid-column-gap: 10px;
 `;
 
-interface HallItemProps {
-  $poster?: string;
-}
-
-export const HallItem = styled.div<HallItemProps>`
-  overflow: hidden;
+export const HallItemContent = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   font-size: 1.2rem;
   padding: 15px;
+  
+`;
+
+export const HallItemPoster = styled(HallItemContent)<{ $poster?: string }>`
+  background: ${({ $poster }) =>
+    `linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2)), 50% 0% / cover url(${imageBase}${$poster})`};
+  transform: scale(1.05);
+  transition: all 1s ease-out;
+`;
+
+export const HallItem = styled.div`
+  overflow: hidden;
+  position: relative;
+
   height: 300px;
   border-radius: ${baseTheme.borderRadius};
-  background: ${({ $poster }) =>
-    $poster
-      ? `linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2)), 50% 0% / cover url(${imageBase}${$poster})`
-      : baseTheme.colors.primary};
+  background: ${baseTheme.colors.primary};
+  &:hover ${HallItemPoster} {
+    transform: scale(1);
+    transition: all 1s ease-in;
+  }
 `;
 
 export const HallItemCreate = styled(HallItem)`
