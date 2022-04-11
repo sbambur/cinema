@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { hallReducer } from "./hallReducer";
 
 export const rootReducer = combineReducers({
-  hallReducer
-})
+  hallReducer,
+});
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;

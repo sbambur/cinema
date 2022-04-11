@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const SideHeader = styled.h3`
+export const SideHeader = styled.p`
   font-size: 1.5rem;
   text-align: center;
   font-weight: 400;

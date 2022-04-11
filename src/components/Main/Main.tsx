@@ -1,18 +1,18 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import { useTypedSelector } from "hooks/useTypedSelector";
 import { AuthContext } from "context/AuthContext";
+import { useActions } from "hooks/useActions";
 
+import CreateHallModal from "components/Main/utils/CreateHallModal";
+import { MemoizedHallCard } from "components/Main/HallCard";
 import { MoviesList } from "components/Aside/MoviesList";
+import CreateHall from "components/Main/CreateHall";
 import Statistic from "components/Aside/Statistic";
 import Header from "components/Header";
-import { MemoizedHallCard } from "components/Main/HallCard";
-import CreateHall from "components/Main/CreateHall";
-import CreateHallModal from "components/Main/utils/CreateHallModal";
-import BaseSettingsModal from "components/Aside/utils/BaseSettingsModal";
 
-import { Button, Controls, StyledLink } from "styles/components";
 import { HallList, ContentContainer, Aside } from "components/Main/styles";
+import { Button, Controls, StyledLink } from "styles/components";
 
 interface isModalOpenState {
   hallModal: boolean;
@@ -20,8 +20,11 @@ interface isModalOpenState {
 }
 
 const Main: FC = () => {
-  const { halls } = useTypedSelector((state) => state.hallReducer);
-  const [basePrice, setBasePrice] = useState(120);
+  const { error, loading, halls } = useTypedSelector(
+    (state) => state.hallReducer
+  );
+  const { fetchHalls } = useActions();
+
   const [auth, setAuth] = useContext(AuthContext);
   const [isModalOpen, setModalOpen] = useState<isModalOpenState>({
     hallModal: false,
@@ -38,6 +41,17 @@ const Main: FC = () => {
     setModalOpen({ hallModal: false, settingsModal: false });
   };
 
+  useEffect(() => {
+    fetchHalls(halls);
+  }, []);
+
+  if (loading) {
+    return <h1>Идёт загрузка</h1>;
+  }
+  if (error) {
+    return <h1>{error}</h1>;
+  }
+
   return (
     <>
       <Header />
@@ -50,11 +64,8 @@ const Main: FC = () => {
         <Statistic />
         <Controls>
           {auth ? (
-            <Button onClick={openModal("settingsModal", true)}>
-              Настройки
-            </Button>
+            <StyledLink to="settings">Страница настройки</StyledLink>
           ) : null}
-          <StyledLink to="settings">Страница настройки</StyledLink>
         </Controls>
       </Aside>
 
@@ -63,11 +74,11 @@ const Main: FC = () => {
           {halls.map((hall) => {
             return (
               <MemoizedHallCard
-                key={hall.id}
-                id={hall.id}
+                key={hall._id}
+                id={hall._id}
                 title={hall.title}
                 movie={hall.movie ? hall.movie.title : "Фильм не выбран"}
-                link={hall.id}
+                link={hall._id}
                 poster={
                   hall.movie
                     ? hall.movie.backdrop_path
@@ -81,15 +92,8 @@ const Main: FC = () => {
           {auth ? <CreateHall openModal={openModal} /> : null}
         </HallList>
       </ContentContainer>
-
-      <BaseSettingsModal
-        basePrice={basePrice}
-        setBasePrice={setBasePrice}
-        closeModal={closeModal}
-        open={isModalOpen.settingsModal}
-      />
       <CreateHallModal
-        basePrice={basePrice}
+        basePrice={120}
         closeModal={closeModal}
         open={isModalOpen.hallModal}
       />

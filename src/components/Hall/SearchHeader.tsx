@@ -56,8 +56,9 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
   };
 
   const itemClickHandler = (key: number) => {
-    const movie: any = foundedMovies.find((movie: IMovie) => movie.id === key);
-
+    const movie: IMovie = foundedMovies.find(
+      (movie: IMovie) => movie.id === key
+    )!;
     setCurrentMovie(movie.title);
     setMovie(currentHall, movie);
     setIsEdit(!isEdit);

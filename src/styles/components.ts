@@ -24,6 +24,7 @@ const ButtonStyles = css`
   transition: background-color ${baseTheme.durations.ms200}ms ease-out;
   &:hover {
     background-color: ${baseTheme.colors.secondary};
+    color: ${baseTheme.colors.font};
   }
 `;
 
@@ -42,10 +43,15 @@ export const ButtonDel = styled(Button)`
   }
 `;
 
-export const Controls = styled.div`
+interface ControlsProps {
+  $center?: boolean;
+}
+
+export const Controls = styled.div<ControlsProps>`
   margin-top: 10px;
   display: flex;
   column-gap: 10px;
   row-gap: 10px;
   flex-wrap: wrap;
+  justify-content: ${({ $center }) => ($center ? "center" : "flex-start")};
 `;

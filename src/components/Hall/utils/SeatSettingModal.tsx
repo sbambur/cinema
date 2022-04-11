@@ -18,7 +18,7 @@ const SeatSettingModal: FC<SeatSettingModalProps> = ({
   currentSeat,
 }) => {
   if (!currentSeat) return null;
-  const { seatNumber, reserved, price, id } = currentSeat;
+  const { seatNumber, reserved, price, _id } = currentSeat;
 
   return (
     <Modal open={open} onClose={closeModal}>
@@ -29,7 +29,7 @@ const SeatSettingModal: FC<SeatSettingModalProps> = ({
         <ModalInput
           type="number"
           value={price}
-          onChange={editSeatPrice(id)}
+          onChange={editSeatPrice(_id)}
         ></ModalInput>
       </p>
     </Modal>
