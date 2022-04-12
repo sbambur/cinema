@@ -1,5 +1,5 @@
-import * as HallActionCreator from "./hall"
+import * as HallActionCreator from "./hall";
 
 export default {
   ...HallActionCreator,
-}
+};

@@ -1,10 +1,13 @@
-import { FC, useContext, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Collection } from "react-virtualized";
+import { DatePicker, TimePicker } from "antd";
+import moment from "moment";
 import "react-virtualized/styles.css";
+import "antd/dist/antd.css";
+import ruRU from "antd/lib/locale/ru_RU";
 
 import { useActions } from "hooks/useActions";
-import { AuthContext } from "context/AuthContext";
 import { useTypedSelector } from "hooks/useTypedSelector";
 
 import { IHall, ISeat } from "types/hall";
@@ -16,21 +19,41 @@ import SearchHeader from "components/Hall/SearchHeader";
 import SeatSettingModal from "components/Hall/utils/SeatSettingModal";
 import { MemoizedMovieDescription } from "components/Aside/MovieDescription";
 
-import { StyledLink } from "styles/components";
+import { Controls, StyledLink } from "styles/components";
 import { Aside, ContentContainer } from "components/Main/styles";
-import { ButtonSeatEdit, CinemaHall, SeatItem } from "components/Hall/styles";
+import { CinemaHall } from "components/Hall/styles";
 
 const Hall: FC = () => {
   const { id: hallId } = useParams();
+
   const { halls } = useTypedSelector((state) => state.hallReducer);
   const [currentHall, setCurrentHall] = useState<IHall | null>(null);
   const [currentSeat, setCurrentSeat] = useState<ISeat | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
-  const { reserveSeat, editSeatPrice } = useActions();
-  const [auth] = useContext(AuthContext);
+  const { reserveSeat, editSeatPrice, editDate, fetchHall } = useActions();
+
+  function onDateChange(_: any, dateString: string) {
+    const formatDate = moment(dateString, "DD.MM.YYYY").format("YYYY-MM-DD");
+
+    if (currentHall && !currentHall.date) {
+      editDate(currentHall, new Date(formatDate));
+    } else {
+      const timeOnly = moment(currentHall?.date).format("HH:mm");
+      const newDate = moment().format(`${formatDate}, ${timeOnly}`);
+
+      editDate(currentHall!, new Date(newDate));
+    }
+  }
+
+  function onTimeChange(_: any, timeString: string) {
+    const dateOnly = moment(currentHall?.date).format("YYYY-MM-DD");
+    const newDate = moment().format(`${dateOnly}, ${timeString}`);
+
+    editDate(currentHall!, new Date(newDate));
+  }
 
   const reserveSeatLocal = (id: string) => {
-    return () => reserveSeat(currentHall, id);
+    return () => reserveSeat(currentHall!, id);
   };
 
   const validatePrice = (price: string): number => {
@@ -43,7 +66,7 @@ const Hall: FC = () => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const price = validatePrice(e.target.value);
       currentSeat && setCurrentSeat({ ...currentSeat, price: price });
-      editSeatPrice(currentHall, id, price);
+      editSeatPrice(currentHall!, id, price);
     };
   };
 
@@ -52,7 +75,7 @@ const Hall: FC = () => {
     return (e: any) => {
       e.stopPropagation();
       currentHall.seats.map((seat: ISeat) => {
-        if (seat.id === key) {
+        if (seat._id === key) {
           setCurrentSeat(seat);
         }
         return null;
@@ -65,9 +88,12 @@ const Hall: FC = () => {
     setModalOpen(false);
   };
 
+  useEffect(() => {
+    fetchHall(hallId!);
+  }, []);
+
   useLayoutEffect(() => {
-    setCurrentHall(halls.find((hall) => hall.id === hallId)!);
-    // console.log(JSON.stringify(currentHall));
+    setCurrentHall(halls.find((hall) => hall._id === hallId)!);
   }, [hallId, halls]);
 
   if (!currentHall) {
@@ -81,22 +107,12 @@ const Hall: FC = () => {
   function cellRenderer({ index }: any) {
     let seat = currentHall!.seats[index];
     return (
-      <Seat key={seat.id}>
-        <SeatItem
-          $x={seat.x}
-          $y={seat.y}
-          $height={seat.height}
-          $width={seat.width}
-          $reserved={seat.reserved}
-          onClick={reserveSeatLocal(seat.id)}
-        >
-          {seat.pos.seat}
-          <p>{seat.price}₽</p>
-          {auth ? (
-            <ButtonSeatEdit onClick={openModal(seat.id)}>Edit</ButtonSeatEdit>
-          ) : null}
-        </SeatItem>
-      </Seat>
+      <Seat
+        key={seat._id}
+        seat={seat}
+        reserveSeatLocal={reserveSeatLocal}
+        openModal={openModal}
+      />
     );
   }
 
@@ -123,7 +139,27 @@ const Hall: FC = () => {
         <StyledLink to="/">Назад</StyledLink>
 
         <SearchHeader currentHall={currentHall} />
-        <div>{currentHall.date}</div>
+        <Controls $center>
+          <DatePicker
+            locale={ruRU.DatePicker}
+            onChange={onDateChange}
+            format={"DD.MM.YYYY"}
+            value={
+              currentHall.date ? moment(new Date(currentHall.date)) : undefined
+            }
+          />
+          <TimePicker
+            locale={ruRU.DatePicker}
+            onChange={onTimeChange}
+            format={"HH:mm"}
+            placeholder={"Время"}
+            value={
+              currentHall.date ? moment(new Date(currentHall.date)) : undefined
+            }
+            disabled={currentHall.date ? false : true}
+          />
+        </Controls>
+
         <CinemaHall>
           <Collection
             cellCount={currentHall.seats.length}

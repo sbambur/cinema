@@ -3,8 +3,19 @@ interface IPos {
   seat: string;
 }
 
+export interface ISeatReq {
+  seatNumber: number;
+  price: number;
+  reserved: boolean;
+  pos: IPos;
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+}
+
 export interface ISeat {
-  id: string;
+  _id: string;
   seatNumber: number;
   price: number;
   reserved: boolean;
@@ -25,7 +36,7 @@ export interface IMovie {
 }
 
 export interface IHall {
-  id: string;
+  _id: string;
   title: string;
   reserved: boolean;
   active: boolean;
@@ -36,25 +47,52 @@ export interface IHall {
 
 export interface HallState {
   halls: IHall[];
+  loading: boolean;
+  error: any;
 }
 
-export enum TodoActionTypes {
+export enum HallActionTypes {
+  FETCH_HALLS = "FETCH_HALLS",
+  FETCH_HALLS_SUCCESS = "FETCH_HALLS_SUCCESS",
+  FETCH_HALLS_ERROR = "FETCH_HALLS_ERROR",
+  DELETE_HALL = "DELETE_HALL",
   ADD_HALL = "ADD_HALL",
   EDIT_HALL = "EDIT_HALL",
-  DELETE_HALL = "DELETE_HALL",
 }
 
-interface AddHallAction {
-  type: TodoActionTypes.ADD_HALL;
-  payload: IHall;
+interface FetchHallAction {
+  type: HallActionTypes.FETCH_HALLS;
 }
-interface EditHallAction {
-  type: TodoActionTypes.EDIT_HALL;
-  payload: IHall;
+
+interface FetchHallSuccessAction {
+  type: HallActionTypes.FETCH_HALLS_SUCCESS;
+  payload: any[];
 }
-interface DeleteHallAction {
-  type: TodoActionTypes.DELETE_HALL;
+
+interface FetchHallErrorAction {
+  type: HallActionTypes.FETCH_HALLS_ERROR;
   payload: string;
 }
 
-export type HallAction = AddHallAction | EditHallAction | DeleteHallAction;
+interface DeleteHallAction {
+  type: HallActionTypes.DELETE_HALL;
+  payload: string;
+}
+
+interface AddHallAction {
+  type: HallActionTypes.ADD_HALL;
+  payload: any;
+}
+
+interface EditHallAction {
+  type: HallActionTypes.EDIT_HALL;
+  payload: any;
+}
+
+export type HallAction =
+  | FetchHallAction
+  | FetchHallSuccessAction
+  | FetchHallErrorAction
+  | DeleteHallAction
+  | AddHallAction
+  | EditHallAction;

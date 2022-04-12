@@ -1,29 +1,42 @@
-import { HallState, TodoActionTypes, HallAction } from "../../types/hall"
+import { HallState, HallActionTypes, HallAction } from "types/hall";
 
 const initialState: HallState = {
-  halls: []
-}
+  halls: [],
+  loading: false,
+  error: null,
+};
 
-export const hallReducer = (state = initialState, action: HallAction): HallState => {
-  const { payload, type } = action
-  switch (type) {
-    case TodoActionTypes.ADD_HALL:
-      return { ...state, halls: [...state.halls, payload] }
+export const hallReducer = (
+  state = initialState,
+  action: HallAction
+): HallState => {
+  switch (action.type) {
+    case HallActionTypes.FETCH_HALLS:
+      return { loading: true, error: null, halls: [] };
+    case HallActionTypes.FETCH_HALLS_SUCCESS:
+      return { loading: false, error: null, halls: action.payload };
+    case HallActionTypes.FETCH_HALLS_ERROR:
+      return { loading: false, error: action.payload, halls: [] };
 
-    case TodoActionTypes.EDIT_HALL:
-      let newHalls = [...state.halls.map(hall => {
-        if (hall.id === payload.id) {
-          return payload
-        }
-        return hall
-      })]
-      return { ...state, halls: newHalls }
-
-    case TodoActionTypes.DELETE_HALL:
-      return { ...state, halls: [...state.halls.filter(hall => hall.id !== payload)]}
+    case HallActionTypes.ADD_HALL:
+      return { ...state, halls: [...state.halls, action.payload] };
+    case HallActionTypes.DELETE_HALL:
+      return {
+        ...state,
+        halls: state.halls.filter((hall) => hall._id !== action.payload),
+      };
+    case HallActionTypes.EDIT_HALL:
+      let newHalls = [
+        ...state.halls.map((hall) => {
+          if (hall._id === action.payload._id) {
+            return action.payload;
+          }
+          return hall;
+        }),
+      ];
+      return { ...state, halls: newHalls };
 
     default:
-      return state
+      return state;
   }
-}
-
+};
