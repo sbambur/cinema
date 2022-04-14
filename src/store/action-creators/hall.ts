@@ -22,6 +22,10 @@ export const fetchHalls = (storeHalls: IHall[]) => {
           payload: response.data,
         });
       }
+      dispatch({
+        type: HallActionTypes.FETCH_HALLS_SUCCESS,
+        payload: [],
+      });
     } catch (e) {
       dispatch({
         type: HallActionTypes.FETCH_HALLS_ERROR,
