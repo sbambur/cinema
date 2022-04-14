@@ -15,17 +15,23 @@ export const fetchHalls = (storeHalls: IHall[]) => {
       if (!storeHalls.length) dispatch({ type: HallActionTypes.FETCH_HALLS });
       const response = await HALLS_URL.get(ENDPOINTS.HALLS);
 
-      if (JSON.stringify(storeHalls) === JSON.stringify(response.data)) {
-      } else {
+      if (!response.data.length) {
+        dispatch({
+          type: HallActionTypes.FETCH_HALLS_SUCCESS,
+          payload: [],
+        });
+      }
+
+      if (
+        response.data.length &&
+        JSON.stringify(storeHalls) !== JSON.stringify(response.data)
+      ) {
         dispatch({
           type: HallActionTypes.FETCH_HALLS_SUCCESS,
           payload: response.data,
         });
+      } else {
       }
-      dispatch({
-        type: HallActionTypes.FETCH_HALLS_SUCCESS,
-        payload: [],
-      });
     } catch (e) {
       dispatch({
         type: HallActionTypes.FETCH_HALLS_ERROR,
