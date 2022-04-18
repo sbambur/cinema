@@ -26,9 +26,17 @@ export interface ISeat {
   y: number;
 }
 
+interface IGenres {
+  id: number;
+  name: string;
+}
+
 export interface IMovie {
   id: number;
   title: string;
+  vote_average?: number;
+  runtime?: number;
+  genres?: IGenres[];
   overview?: string;
   release_date?: string;
   poster_path?: string;

@@ -8,6 +8,7 @@ import { api_key } from "config";
 import { useActions } from "hooks/useActions";
 
 import * as S from "components/Hall/styles/searchHeader";
+import axios from "axios";
 
 interface SearchHeaderProps {
   currentHall: IHall;
@@ -55,12 +56,13 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
     debouncedOnChange();
   };
 
-  const itemClickHandler = (key: number) => {
-    const movie: IMovie = foundedMovies.find(
-      (movie: IMovie) => movie.id === key
-    )!;
-    setCurrentMovie(movie.title);
-    setMovie(currentHall, movie);
+  const itemClickHandler = async (key: number) => {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${key}?api_key=9113d8d7a27ece3272cc84a40839bea3&language=ru-RU`
+    );
+
+    setCurrentMovie(response.data.title);
+    setMovie(currentHall, response.data);
     setIsEdit(!isEdit);
   };
 
