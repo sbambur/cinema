@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 
 import { imageBase } from "api/api";
 
-import { IMovie } from "types/hall";
+import { IMovie } from "types/session";
 
 import { SideHeader, MovieItem, MoviePoster } from "components/Aside/styles";
 

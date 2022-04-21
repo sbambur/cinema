@@ -1,5 +1,5 @@
 import { imageBase } from "api/api";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { baseTheme } from "styles/theme";
 
 export const ContentContainer = styled.div`
@@ -50,15 +50,31 @@ export const HallItem = styled.div`
   }
 `;
 
-export const HallItemCreate = styled(HallItem)`
+export const SchemeItem = styled.div`
+  padding: 0 10px;
+  margin-bottom: 10px;
+  border-radius: ${baseTheme.borderRadius};
+  background-color: ${baseTheme.colors.light};
+`;
+
+const createArea = css`
   background-color: ${baseTheme.colors.light};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
   cursor: pointer;
+  border-radius: ${baseTheme.borderRadius};
   transition: background-color ${baseTheme.durations.ms200}ms ease-out;
   &:hover {
     background-color: ${baseTheme.colors.secondary};
   }
+`;
+
+export const HallItemCreate = styled(HallItem)`
+  font-size: 4rem;
+  ${createArea}
+`;
+
+export const HallSchemeCreate = styled.div`
+  ${createArea}
 `;

@@ -1,14 +1,14 @@
 import { FC } from "react";
 import { useEffect, useState } from "react";
 
-import { IHall } from "types/hall";
-import { getHallsStat } from "components/Aside/utils/calculateStatistic";
+import { ISession } from "types/session";
+// import { getHallsStat } from "components/Aside/utils/calculateStatistic";
 import { useTypedSelector } from "hooks/useTypedSelector";
 
 import { SideHeader, StatisticContainer } from "components/Aside/styles";
 
 interface StatisticProps {
-  currentHall?: IHall;
+  currentSession?: ISession;
 }
 
 interface statInfo {
@@ -25,17 +25,17 @@ const initialStatState: statInfo = {
   sum: 0,
 };
 
-const Statistic: FC<StatisticProps> = ({ currentHall }) => {
-  const { halls } = useTypedSelector((state) => state.hallReducer);
+const Statistic: FC<StatisticProps> = ({ currentSession }) => {
+  const { sessions } = useTypedSelector((state) => state.sessionReducer);
   const [stat, setStat] = useState<statInfo>(initialStatState);
 
   useEffect(() => {
-    if (currentHall) {
-      setStat(getHallsStat([currentHall]));
+    if (currentSession) {
+      // setStat(getHallsStat([currentSession]));
     } else {
-      setStat(getHallsStat(halls));
+      // setStat(getHallsStat(sessions));
     }
-  }, [halls, currentHall]);
+  }, [sessions, currentSession]);
 
   return (
     <StatisticContainer>

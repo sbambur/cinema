@@ -42,6 +42,15 @@ export const ModalInput = styled.input`
   margin: 7px 0;
 `;
 
+export const ModalSelect = styled.select`
+  display: block;
+  border-radius: ${baseTheme.borderRadius};
+  border: none;
+  outline: none;
+  padding: 8px;
+  margin: 7px 0;
+`;
+
 export const ErrorMessage = styled.span`
   display: inline-block;
   font-size: 0.8rem;

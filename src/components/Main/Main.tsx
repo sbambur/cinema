@@ -4,45 +4,36 @@ import { useTypedSelector } from "hooks/useTypedSelector";
 import { AuthContext } from "context/AuthContext";
 import { useActions } from "hooks/useActions";
 
-import CreateHallModal from "components/Main/utils/CreateHallModal";
-import { MemoizedHallCard } from "components/Main/HallCard";
+import CreateSessionModal from "components/Main/utils/CreateSessionModal";
+import { MemoizedHallCard } from "components/Main/SessionCard";
 import { MoviesList } from "components/Aside/MoviesList";
-import CreateHall from "components/Main/CreateHall";
 import Statistic from "components/Aside/Statistic";
 import Header from "components/Header";
+import {
+  HallItemCreate,
+  HallSchemeCreate,
+  SchemeItem,
+} from "components/Main/styles";
 
 import { HallList, ContentContainer, Aside } from "components/Main/styles";
 import { Button, Controls, StyledLink } from "styles/components";
-
-interface isModalOpenState {
-  hallModal: boolean;
-  settingsModal: boolean;
-}
+import CreateSchemeModal from "./utils/CreateChemeModal";
 
 const Main: FC = () => {
-  const { error, loading, halls } = useTypedSelector(
-    (state) => state.hallReducer
+  const { error, loading, sessions } = useTypedSelector(
+    (state) => state.sessionReducer
   );
-  const { fetchHalls } = useActions();
+
+  const { scheme } = useTypedSelector((state) => state.schemeReducer);
+  const { fetchSessions, fetchScheme } = useActions();
 
   const [auth, setAuth] = useContext(AuthContext);
-  const [isModalOpen, setModalOpen] = useState<isModalOpenState>({
-    hallModal: false,
-    settingsModal: false,
-  });
-
-  const openModal = (modalName: string, isOpen: boolean) => {
-    return () => {
-      setModalOpen({ ...isModalOpen, [modalName]: isOpen });
-    };
-  };
-
-  const closeModal = () => {
-    setModalOpen({ hallModal: false, settingsModal: false });
-  };
+  const [createSessionModalOpen, setCreateSessionModalOpen] = useState(false);
+  const [createSchemeModalOpen, setCreateSchemeModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchHalls(halls);
+    fetchSessions(sessions);
+    fetchScheme();
   }, []);
 
   if (loading) {
@@ -61,7 +52,23 @@ const Main: FC = () => {
           {auth ? "Log out" : "Login"}
         </Button>
         <MoviesList />
-        <Statistic />
+        {/* <Statistic /> */}
+        <div>
+          <p>Схемы залов:</p>
+          <ul className="list">
+            {scheme.map((schemeOne) => {
+              return (
+                <SchemeItem key={schemeOne.id}>{schemeOne.title}</SchemeItem>
+              );
+            })}
+            {auth ? (
+              <HallSchemeCreate onClick={() => setCreateSchemeModalOpen(true)}>
+                +
+              </HallSchemeCreate>
+            ) : null}
+          </ul>
+        </div>
+
         <Controls>
           {auth ? (
             <StyledLink to="settings">Страница настройки</StyledLink>
@@ -71,31 +78,42 @@ const Main: FC = () => {
 
       <ContentContainer>
         <HallList>
-          {halls.map((hall) => {
+          {sessions.map((session) => {
+            const schemeName = scheme.find(
+              (schemeOne) => schemeOne.id === session.hall
+            )?.title;
             return (
               <MemoizedHallCard
-                key={hall._id}
-                id={hall._id}
-                title={hall.title}
-                movie={hall.movie ? hall.movie.title : "Фильм не выбран"}
-                link={hall._id}
+                key={session.id}
+                id={session.id}
+                title={schemeName ? schemeName : "нету"}
+                movie={session.movie ? session.movie.title : "Фильм не выбран"}
+                link={session.id}
                 poster={
-                  hall.movie
-                    ? hall.movie.backdrop_path
-                      ? hall.movie.backdrop_path
+                  session.movie
+                    ? session.movie.backdrop_path
+                      ? session.movie.backdrop_path
                       : ""
                     : ""
                 }
               />
             );
           })}
-          {auth ? <CreateHall openModal={openModal} /> : null}
+          {auth ? (
+            <HallItemCreate onClick={() => setCreateSessionModalOpen(true)}>
+              +
+            </HallItemCreate>
+          ) : null}
         </HallList>
       </ContentContainer>
-      <CreateHallModal
+      <CreateSessionModal
+        closeModal={() => setCreateSessionModalOpen(false)}
+        open={createSessionModalOpen}
+      />
+      <CreateSchemeModal
         basePrice={120}
-        closeModal={closeModal}
-        open={isModalOpen.hallModal}
+        closeModal={() => setCreateSchemeModalOpen(false)}
+        open={createSchemeModalOpen}
       />
     </>
   );

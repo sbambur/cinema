@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { AuthContext } from "context/AuthContext";
-import Hall from "components/Hall/Hall";
+import Session from "components/Session/Session";
 import Main from "components/Main/Main";
 import Settings from "components/Settings/Settings";
 import GlobalStyles from "styles/global";
@@ -17,7 +17,7 @@ const App: FC = () => {
       <MainContainer>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/hall/:id" element={<Hall />} />
+          <Route path="/hall/:id" element={<Session />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </MainContainer>

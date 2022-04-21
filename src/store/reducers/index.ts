@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import { hallReducer } from "./hallReducer";
+import { sessionReducer } from "./sessionReducer";
+import { schemeReducer } from "./schemeReducer";
 
 export const rootReducer = combineReducers({
-  hallReducer,
+  sessionReducer,
+  schemeReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,20 +1,20 @@
 import { FC, useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 
-import { IHall, IMovie } from "types/hall";
+import { ISession, IMovie } from "types/session";
 
 import { API } from "api/api";
 import { api_key } from "config";
 import { useActions } from "hooks/useActions";
 
-import * as S from "components/Hall/styles/searchHeader";
+import * as S from "components/Session/styles/searchHeader";
 import axios from "axios";
 
 interface SearchHeaderProps {
-  currentHall: IHall;
+  currentSession: ISession;
 }
 
-const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
+const SearchHeader: FC<SearchHeaderProps> = ({ currentSession }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [currentMovie, setCurrentMovie] = useState<string>("");
   const [foundedMovies, setFoundedMovies] = useState<IMovie[]>([]);
@@ -28,12 +28,12 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
   });
 
   useEffect(() => {
-    if (currentHall.movie) {
-      setCurrentMovie(currentHall.movie.title);
+    if (currentSession.movie) {
+      setCurrentMovie(currentSession.movie.title);
     } else {
       setCurrentMovie("");
     }
-  }, [currentHall]);
+  }, [currentSession]);
 
   const requestMovies = () => {
     API.get(`search/movie`, {
@@ -62,7 +62,7 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
     );
 
     setCurrentMovie(response.data.title);
-    setMovie(currentHall, response.data);
+    setMovie(currentSession, response.data);
     setIsEdit(!isEdit);
   };
 
@@ -101,7 +101,11 @@ const SearchHeader: FC<SearchHeaderProps> = ({ currentHall }) => {
         </S.SearchForm>
       ) : (
         <span>
-          "{!currentHall.movie ? "Введите название" : currentHall.movie.title}"
+          "
+          {!currentSession.movie
+            ? "Введите название"
+            : currentSession.movie.title}
+          "
         </span>
       )}
       <S.ToggleButton $edit={isEdit} onClick={() => setIsEdit(!isEdit)}>

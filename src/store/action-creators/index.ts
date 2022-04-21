@@ -1,5 +1,7 @@
-import * as HallActionCreator from "./hall";
+import * as SessionActionCreator from "./session";
+import * as SchemeActionCreator from "./scheme";
 
 export default {
-  ...HallActionCreator,
+  ...SessionActionCreator,
+  ...SchemeActionCreator,
 };

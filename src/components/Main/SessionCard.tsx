@@ -10,7 +10,7 @@ import {
   HallItemPoster,
 } from "components/Main/styles";
 
-interface HallCardProps {
+interface SessionCardProps {
   link: string;
   title: string;
   movie: string;
@@ -18,13 +18,13 @@ interface HallCardProps {
   poster: string;
 }
 
-const HallCard: FC<HallCardProps> = ({ link, title, movie, id, poster }) => {
-  const { deleteHall } = useActions();
+const HallCard: FC<SessionCardProps> = ({ link, title, movie, id, poster }) => {
+  const { deleteSession } = useActions();
   const [auth] = useContext(AuthContext);
 
   const handleClick = (key: string) => {
     return () => {
-      deleteHall(key);
+      deleteSession(key);
     };
   };
 

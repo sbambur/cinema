@@ -14,12 +14,12 @@ interface CreateHallModalProps {
   closeModal: () => void;
 }
 
-const CreateHallModal: FC<CreateHallModalProps> = ({
+const CreateSchemeModal: FC<CreateHallModalProps> = ({
   basePrice,
   open,
   closeModal,
 }) => {
-  const { halls } = useTypedSelector((state) => state.hallReducer);
+  const { scheme } = useTypedSelector((state) => state.schemeReducer);
 
   const {
     register,
@@ -27,15 +27,17 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
     reset,
     formState: { errors },
   } = useForm();
-  const { createHall } = useActions();
+  const { createScheme } = useActions();
 
   const onSubmit = (data: any) => {
-    createHall(data);
+    // console.log(data);
+
+    createScheme(data);
     closeModal();
     reset({});
   };
 
-  const hallsTitles = halls.map((hall) => hall.title);
+  const schemeTitles = scheme.map((schemeOne) => schemeOne.title);
 
   return (
     <Modal open={open} onClose={closeModal}>
@@ -45,7 +47,7 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
           {...register("title", {
             required: true,
             maxLength: 20,
-            validate: (value) => !hallsTitles.includes(value),
+            validate: (value) => !schemeTitles.includes(value),
           })}
           name="title"
         />
@@ -96,4 +98,4 @@ const CreateHallModal: FC<CreateHallModalProps> = ({
   );
 };
 
-export default CreateHallModal;
+export default CreateSchemeModal;

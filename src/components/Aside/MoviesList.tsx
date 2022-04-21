@@ -11,9 +11,9 @@ import "swiper/css/pagination";
 import { SideHeader, MoviesListSlider } from "components/Aside/styles";
 
 export const MoviesList: FC = () => {
-  const { halls } = useTypedSelector((state) => state.hallReducer);
+  const { sessions } = useTypedSelector((state) => state.sessionReducer);
 
-  const listMovies = halls.filter(({ movie }) => Boolean(movie));
+  const listMovies = sessions.filter(({ movie }) => Boolean(movie));
 
   if (!listMovies.length) return null;
 
@@ -27,15 +27,15 @@ export const MoviesList: FC = () => {
           slidesPerView={1}
           pagination={{ clickable: true }}
         >
-          {halls.map((hall) => {
-            if (!hall.movie) {
+          {sessions.map((session) => {
+            if (!session.movie) {
               return null;
             }
             return (
-              <SwiperSlide key={hall.movie.id}>
+              <SwiperSlide key={session.movie.id}>
                 <MovieItem
-                  title={hall.movie.title}
-                  poster={hall.movie.poster_path}
+                  title={session.movie.title}
+                  poster={session.movie.poster_path}
                 />
               </SwiperSlide>
             );
